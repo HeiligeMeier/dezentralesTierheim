@@ -5,14 +5,14 @@ Ziel ist es, eine transparente, automatisierte und leicht skalierbare Lösung f�
 
 ### Features:
 
-Workflow-Management: Automatisierte Prozesse für Tierregistrierung, Vermittlung und Adoption. \
-Dezentrale Struktur: Ermöglicht es Tierheimen, Pflegefamilien und Freiwilligen weltweit, nahtlos zusammenzuarbeiten. \
-Erweiterbarkeit: Modular aufgebaut und leicht anpassbar für zusätzliche Funktionen.
+- Workflow-Management: Automatisierte Prozesse für Tierregistrierung, Vermittlung und Adoption. \
+- Dezentrale Struktur: Ermöglicht es Tierheimen, Pflegefamilien und Freiwilligen weltweit, nahtlos zusammenzuarbeiten. \
+- Erweiterbarkeit: Modular aufgebaut und leicht anpassbar für zusätzliche Funktionen.
 
 ### Technologien: 
 
-SpiffWorkflow: Für die Modellierung und Steuerung der Workflows. \
-Java/REST: Backend-Entwicklung und API-Bereitstellung.
+- SpiffWorkflow: Für die Modellierung und Steuerung der Workflows. \
+- Java/REST: Backend-Entwicklung und API-Bereitstellung.
 
 ### Ziele: 
 - Förderung der Tiervermittlung durch ein globales Netzwerk. 
