@@ -2,6 +2,8 @@ package de.dezentralestierheim.jpa;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -14,6 +16,8 @@ public class Pflegestelle extends PanacheEntity {
         HUND,
         KATZE
     }
+
+    @Enumerated(EnumType.STRING)
     private Tierart tierart;
     private String name;
     private String email;

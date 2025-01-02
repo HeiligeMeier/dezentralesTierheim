@@ -1,6 +1,8 @@
 package de.dezentralestierheim.rest;
 
 import de.dezentralestierheim.jpa.Tier;
+import de.dezentralestierheim.jpa.TierRepository;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -10,13 +12,19 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/tiere")
 public class TierResource {
+    private final TierRepository tierRepository;
+
+    @Inject
+    public TierResource(TierRepository tierRepository) {
+        this.tierRepository = tierRepository;
+    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public Response addTier(Tier tier) {
 
-        tier.persist();
+        tierRepository.persist(tier);
 
         // 201 created
         return Response.status(Response.Status.CREATED).entity(tier.id).build();

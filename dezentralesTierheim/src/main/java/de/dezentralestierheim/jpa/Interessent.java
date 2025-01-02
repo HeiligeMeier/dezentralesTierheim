@@ -2,6 +2,8 @@ package de.dezentralestierheim.jpa;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 import java.time.LocalDate;
 
@@ -25,10 +27,12 @@ public class Interessent extends PanacheEntity {
 
     private String name;
     private LocalDate geburtsdatum;
+    @Enumerated(EnumType.STRING)
     private Wohnlage wohnlage;
     private Boolean gartenOderBalkon;
     private int quadratmeter;
     private Boolean hatKinder;
+    @Enumerated(EnumType.STRING)
     private OtherAnimals andereTiere;
 
     public Long getId() {

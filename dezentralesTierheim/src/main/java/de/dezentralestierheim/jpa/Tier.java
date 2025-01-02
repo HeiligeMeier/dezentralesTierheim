@@ -2,6 +2,8 @@ package de.dezentralestierheim.jpa;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 import java.time.LocalDate;
 
@@ -19,10 +21,12 @@ public class Tier extends PanacheEntity {
     private String name;
     private Long pflegestellenID;
     private String inseratText;
+    @Enumerated(EnumType.STRING)
     private Tierart tierart;
     private String rasse;
     private Boolean istKinderfreundlich;
-    private Boolean verträgtSichMitAnderenTieren;
+    private Boolean vertraegtSichMitAnderenTieren;
+    @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDate geburtsdatum;
     private Boolean istAdoptiert;
@@ -69,11 +73,11 @@ public class Tier extends PanacheEntity {
     }
 
     public Boolean getGoodWithOtherAnimals() {
-        return verträgtSichMitAnderenTieren;
+        return vertraegtSichMitAnderenTieren;
     }
 
     public void setGoodWithOtherAnimals(Boolean goodWithOtherAnimals) {
-        verträgtSichMitAnderenTieren = goodWithOtherAnimals;
+        vertraegtSichMitAnderenTieren = goodWithOtherAnimals;
     }
 
     public Boolean getChildFriendly() {
