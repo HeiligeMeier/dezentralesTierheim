@@ -15,7 +15,7 @@ Ziel ist es, eine transparente, automatisierte und leicht skalierbare Lösung f�
 - **Java/REST:** Backend-Entwicklung und API-Bereitstellung.
 
 ### Ziele: 
-- **Förderung** der Tiervermittlung durch ein globales Netzwerk. 
+- **Förderung** der Tiervermittlung durch ein großes Netzwerk. 
 - **Maximierung** der Effizienz von Vermittlungsprozessen. 
 - **Unterstützung** von Transparenz und Vertrauen durch dokumentierte Workflows.
 
