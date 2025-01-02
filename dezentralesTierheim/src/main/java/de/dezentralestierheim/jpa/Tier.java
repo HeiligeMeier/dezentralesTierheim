@@ -4,8 +4,6 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 
 @Entity
 public class Tier extends PanacheEntity {
@@ -22,12 +20,12 @@ public class Tier extends PanacheEntity {
     private Long pflegestellenID;
     private String inseratText;
     private Tierart tierart;
-    private String breed; //Rasse
-    private Boolean isChildFriendly;
-    private Boolean isGoodWithOtherAnimals;
+    private String rasse;
+    private Boolean istKinderfreundlich;
+    private Boolean verträgtSichMitAnderenTieren;
     private Status status;
-    private LocalDate dayOfBirth;
-    private Boolean isAdopted;
+    private LocalDate geburtsdatum;
+    private Boolean istAdoptiert;
     //Wie machen wir das mit dem Bild?
 
     public Long getId() {
@@ -62,28 +60,28 @@ public class Tier extends PanacheEntity {
         this.tierart = tierart;
     }
 
-    public String getBreed() {
-        return breed;
+    public String getRasse() {
+        return rasse;
     }
 
-    public void setBreed(String breed) {
-        this.breed = breed;
+    public void setRasse(String rasse) {
+        this.rasse = rasse;
     }
 
     public Boolean getGoodWithOtherAnimals() {
-        return isGoodWithOtherAnimals;
+        return verträgtSichMitAnderenTieren;
     }
 
     public void setGoodWithOtherAnimals(Boolean goodWithOtherAnimals) {
-        isGoodWithOtherAnimals = goodWithOtherAnimals;
+        verträgtSichMitAnderenTieren = goodWithOtherAnimals;
     }
 
     public Boolean getChildFriendly() {
-        return isChildFriendly;
+        return istKinderfreundlich;
     }
 
     public void setChildFriendly(Boolean childFriendly) {
-        isChildFriendly = childFriendly;
+        istKinderfreundlich = childFriendly;
     }
 
     public String getName() {
@@ -94,20 +92,20 @@ public class Tier extends PanacheEntity {
         this.name = name;
     }
 
-    public LocalDate getDayOfBirth() {
-        return dayOfBirth;
+    public LocalDate getGeburtsdatum() {
+        return geburtsdatum;
     }
 
-    public void setDayOfBirth(LocalDate dayOfBirth) {
-        this.dayOfBirth = dayOfBirth;
+    public void setGeburtsdatum(LocalDate geburtsdatum) {
+        this.geburtsdatum = geburtsdatum;
     }
 
     public Boolean getAdopted() {
-        return isAdopted;
+        return istAdoptiert;
     }
 
     public void setAdopted(Boolean adopted) {
-        isAdopted = adopted;
+        istAdoptiert = adopted;
     }
 
     public Status getStatus() {

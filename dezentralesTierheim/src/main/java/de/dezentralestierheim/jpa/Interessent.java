@@ -4,13 +4,11 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 
 @Entity
 public class Interessent extends PanacheEntity {
 
-    public enum ResidentialLocation{
+    public enum Wohnlage{
         SEHR_RUHIG,//("Ländliche Gegend, keine Hauptstraße im Umkreis von 2km"),
         RUHIG,//("Ländliche Gegend, keine Hauptstraße im Umkreis von 1km")
         NORMAL,//("Größeres Dorf, wenig Verkehr, keine Hauptstrasse in unmittelbarer Nähe")
@@ -26,12 +24,12 @@ public class Interessent extends PanacheEntity {
     }
 
     private String name;
-    private LocalDate dateOfBirth;
-    private ResidentialLocation location;
-    private Boolean gardenOrBalcony;
-    private int squareMeters;
-    private Boolean hasKids;
-    private OtherAnimals otherAnimals;
+    private LocalDate geburtsdatum;
+    private Wohnlage wohnlage;
+    private Boolean gartenOderBalkon;
+    private int quadratmeter;
+    private Boolean hatKinder;
+    private OtherAnimals andereTiere;
 
     public Long getId() {
         return id;
@@ -46,51 +44,51 @@ public class Interessent extends PanacheEntity {
         this.name = name;
     }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
+    public LocalDate getGeburtsdatum() {
+        return geburtsdatum;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setGeburtsdatum(LocalDate geburtsdatum) {
+        this.geburtsdatum = geburtsdatum;
     }
 
-    public Boolean getGardenOrBalcony() {
-        return gardenOrBalcony;
+    public Boolean getGartenOderBalkon() {
+        return gartenOderBalkon;
     }
 
-    public void setGardenOrBalcony(Boolean gardenOrBalcony) {
-        this.gardenOrBalcony = gardenOrBalcony;
+    public void setGartenOderBalkon(Boolean gartenOderBalkon) {
+        this.gartenOderBalkon = gartenOderBalkon;
     }
 
-    public int getSquareMeters() {
-        return squareMeters;
+    public int getQuadratmeter() {
+        return quadratmeter;
     }
 
-    public void setSquareMeters(int squareMeters) {
-        this.squareMeters = squareMeters;
+    public void setQuadratmeter(int quadratmeter) {
+        this.quadratmeter = quadratmeter;
     }
 
-    public Boolean getHasKids() {
-        return hasKids;
+    public Boolean getHatKinder() {
+        return hatKinder;
     }
 
-    public void setHasKids(Boolean hasKids) {
-        this.hasKids = hasKids;
+    public void setHatKinder(Boolean hasKids) {
+        this.hatKinder = hasKids;
     }
 
-    public ResidentialLocation getLocation() {
-        return location;
+    public Wohnlage getWohnlage() {
+        return wohnlage;
     }
 
-    public void setLocation(ResidentialLocation location) {
-        this.location = location;
+    public void setLocation(Wohnlage wohnlage) {
+        this.wohnlage = wohnlage;
     }
 
-    public OtherAnimals getOtherAnimals() {
-        return otherAnimals;
+    public OtherAnimals getAndereTiere() {
+        return andereTiere;
     }
 
-    public void setOtherAnimals(OtherAnimals otherAnimals) {
-        this.otherAnimals = otherAnimals;
+    public void setAndereTiere(OtherAnimals andereTiere) {
+        this.andereTiere = andereTiere;
     }
 }
