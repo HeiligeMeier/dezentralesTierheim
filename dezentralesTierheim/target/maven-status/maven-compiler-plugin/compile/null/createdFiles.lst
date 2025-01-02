@@ -1,2 +1,4 @@
-de/dezentralestierheim/jpa/Pflegestelle.class
-de/dezentralestierheim/jpa/PflegestelleRepository.class
+de\dezentralestierheim\jpa\Pflegestelle.class
+de\dezentralestierheim\jpa\Tier.class
+de\dezentralestierheim\jpa\Interessent.class
+de\dezentralestierheim\jpa\PflegestelleRepository.class

@@ -4,15 +4,27 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 public class Pflegestelle extends PanacheEntity {
+
+    public enum Tierart{
+        HUND,
+        KATZE
+    }
+    private Tierart tierart;
     private String name;
     private String email;
-    private String[] tierart;
     private String adresse;
     private boolean nurGesund;
     private LocalDate freiSeit;
+
+
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -28,14 +40,6 @@ public class Pflegestelle extends PanacheEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String[] getTierart() {
-        return tierart;
-    }
-
-    public void setTierart(String[] tierart) {
-        this.tierart = tierart;
     }
 
     public String getAdresse() {
@@ -60,5 +64,13 @@ public class Pflegestelle extends PanacheEntity {
 
     public void setFreiSeit(LocalDate freiSeit) {
         this.freiSeit = freiSeit;
+    }
+
+    public Tierart getTierart() {
+        return tierart;
+    }
+
+    public void setTierart(Tierart tierart) {
+        this.tierart = tierart;
     }
 }
