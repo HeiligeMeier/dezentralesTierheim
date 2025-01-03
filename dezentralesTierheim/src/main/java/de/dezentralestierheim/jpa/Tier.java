@@ -18,6 +18,10 @@ public class Tier extends PanacheEntity {
         GESUND, KRANK, TOT
     }
 
+    public enum AufnahmeNichtMoeglich {
+        FALSE, RUECKZIEHER_VOM_BESITZER, KEINE_KAPAZITAET
+    }
+
     private String name;
     private Long pflegestellenID;
     private String inseratText;
@@ -30,7 +34,8 @@ public class Tier extends PanacheEntity {
     private Status status;
     private LocalDate geburtsdatum;
     private Boolean istAdoptiert;
-    private Boolean aufnahmeNichtMoeglich; //Wenn Pflegestellen keine Kapazität haben oder wenn Aufnahme von Tierbesitzer abgebrochen wurde
+    @Enumerated(EnumType.STRING)
+    private AufnahmeNichtMoeglich aufnahmeNichtMoeglich; //Wenn Pflegestellen keine Kapazität haben oder wenn Aufnahme von Tierbesitzer abgebrochen wurde
     //Wie machen wir das mit dem Bild?
 
     public Long getId() {
@@ -101,11 +106,11 @@ public class Tier extends PanacheEntity {
         this.istKinderfreundlich = istKinderfreundlich;
     }
 
-    public Boolean getAufnahmeNichtMoeglich() {
+    public AufnahmeNichtMoeglich getAufnahmeNichtMoeglich() {
         return aufnahmeNichtMoeglich;
     }
 
-    public void setAufnahmeNichtMoeglich(Boolean aufnahmeNichtMoeglich) {
+    public void setAufnahmeNichtMoeglich(AufnahmeNichtMoeglich aufnahmeNichtMoeglich) {
         this.aufnahmeNichtMoeglich = aufnahmeNichtMoeglich;
     }
 
