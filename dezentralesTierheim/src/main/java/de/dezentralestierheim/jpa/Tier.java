@@ -124,4 +124,6 @@ public class Tier extends PanacheEntity {
     public void setVertraegtSichMitAnderenTieren(Boolean vertraegtSichMitAnderenTieren) {
         this.vertraegtSichMitAnderenTieren = vertraegtSichMitAnderenTieren;
     }
+
+
 }

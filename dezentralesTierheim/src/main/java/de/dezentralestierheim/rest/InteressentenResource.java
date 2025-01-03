@@ -43,7 +43,7 @@ public class InteressentenResource {
         }
 
         // Fetch Tier
-        Tier tier = tierRepository.findById(interessent.getInteressiertAn());
+        Tier tier = tierRepository.findById(interessent.getInteressiertAnTierID());
         if (tier == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Tier nicht gefunden.").build();
         }

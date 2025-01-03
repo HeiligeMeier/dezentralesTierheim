@@ -34,7 +34,7 @@ public class Interessent extends PanacheEntity {
     private Boolean hatKinder;
     @Enumerated(EnumType.STRING)
     private OtherAnimals andereTiere;
-    private int interessiertAnTierID;
+    private Long interessiertAnTierID;
 
     public Long getId() {
         return id;
@@ -97,11 +97,11 @@ public class Interessent extends PanacheEntity {
         this.wohnlage = wohnlage;
     }
 
-    public int getInteressiertAnTierID() {
+    public Long getInteressiertAnTierID() {
         return interessiertAnTierID;
     }
 
-    public void setInteressiertAnTierID(int interessiertAnTierID) {
+    public void setInteressiertAnTierID(Long interessiertAnTierID) {
         this.interessiertAnTierID = interessiertAnTierID;
     }
 }
