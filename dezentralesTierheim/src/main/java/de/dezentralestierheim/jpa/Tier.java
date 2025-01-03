@@ -30,6 +30,7 @@ public class Tier extends PanacheEntity {
     private Status status;
     private LocalDate geburtsdatum;
     private Boolean istAdoptiert;
+    private Boolean aufnahmeNichtMoeglich; //Wenn Pflegestellen keine Kapazität haben oder wenn Aufnahme von Tierbesitzer abgebrochen wurde
     //Wie machen wir das mit dem Bild?
 
     public Long getId() {
@@ -72,22 +73,6 @@ public class Tier extends PanacheEntity {
         this.rasse = rasse;
     }
 
-    public Boolean getGoodWithOtherAnimals() {
-        return vertraegtSichMitAnderenTieren;
-    }
-
-    public void setGoodWithOtherAnimals(Boolean goodWithOtherAnimals) {
-        vertraegtSichMitAnderenTieren = goodWithOtherAnimals;
-    }
-
-    public Boolean getChildFriendly() {
-        return istKinderfreundlich;
-    }
-
-    public void setChildFriendly(Boolean childFriendly) {
-        istKinderfreundlich = childFriendly;
-    }
-
     public String getName() {
         return name;
     }
@@ -104,17 +89,39 @@ public class Tier extends PanacheEntity {
         this.geburtsdatum = geburtsdatum;
     }
 
-    public Boolean getAdopted() {
-        return istAdoptiert;
-    }
-
-    public void setAdopted(Boolean adopted) {
-        istAdoptiert = adopted;
-    }
-
     public Status getStatus() {
         return status;
     }
 
+    public Boolean getIstKinderfreundlich() {
+        return istKinderfreundlich;
+    }
 
+    public void setIstKinderfreundlich(Boolean istKinderfreundlich) {
+        this.istKinderfreundlich = istKinderfreundlich;
+    }
+
+    public Boolean getAufnahmeNichtMoeglich() {
+        return aufnahmeNichtMoeglich;
+    }
+
+    public void setAufnahmeNichtMoeglich(Boolean aufnahmeNichtMoeglich) {
+        this.aufnahmeNichtMoeglich = aufnahmeNichtMoeglich;
+    }
+
+    public Boolean getIstAdoptiert() {
+        return istAdoptiert;
+    }
+
+    public void setIstAdoptiert(Boolean istAdoptiert) {
+        this.istAdoptiert = istAdoptiert;
+    }
+
+    public Boolean getVertraegtSichMitAnderenTieren() {
+        return vertraegtSichMitAnderenTieren;
+    }
+
+    public void setVertraegtSichMitAnderenTieren(Boolean vertraegtSichMitAnderenTieren) {
+        this.vertraegtSichMitAnderenTieren = vertraegtSichMitAnderenTieren;
+    }
 }

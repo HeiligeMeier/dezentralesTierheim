@@ -6,8 +6,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 
 @Entity
 public class Pflegestelle extends PanacheEntity {
@@ -22,8 +20,10 @@ public class Pflegestelle extends PanacheEntity {
     private String name;
     private String email;
     private String adresse;
-    private boolean nurGesund;
-    private LocalDate freiSeit;
+    private boolean nurGesund; //Pflegestelle nimmt nur gesunde Tiere auf
+    private LocalDate zuletztBelegtAm; //Datum, an dem Pflegestelle zuletzt ein Tier bekommen hat (wenn mindestens ein Tier, dann Datum = 9999-12-31)
+    private int kapazitaet; //So viele Tiere sind aktuell auf Pflegestelle
+    private int maxKapazitaet; //So viele Tiere möchte Pflegestelle maximal aufnehmen
 
 
     public Long getId() {
@@ -62,12 +62,12 @@ public class Pflegestelle extends PanacheEntity {
         this.nurGesund = nurGesund;
     }
 
-    public LocalDate getFreiSeit() {
-        return freiSeit;
+    public LocalDate getZuletztBelegtAm() {
+        return zuletztBelegtAm;
     }
 
-    public void setFreiSeit(LocalDate freiSeit) {
-        this.freiSeit = freiSeit;
+    public void setZuletztBelegtAm(LocalDate zuletztBelegtAm) {
+        this.zuletztBelegtAm = zuletztBelegtAm;
     }
 
     public Tierart getTierart() {
@@ -76,5 +76,21 @@ public class Pflegestelle extends PanacheEntity {
 
     public void setTierart(Tierart tierart) {
         this.tierart = tierart;
+    }
+
+    public int getKapazitaet() {
+        return kapazitaet;
+    }
+
+    public void setKapazitaet(int kapazitaet) {
+        this.kapazitaet = kapazitaet;
+    }
+
+    public int getMaxKapazitaet() {
+        return maxKapazitaet;
+    }
+
+    public void setMaxKapazitaet(int maxKapazitaet) {
+        this.maxKapazitaet = maxKapazitaet;
     }
 }

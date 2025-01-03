@@ -34,6 +34,7 @@ public class Interessent extends PanacheEntity {
     private Boolean hatKinder;
     @Enumerated(EnumType.STRING)
     private OtherAnimals andereTiere;
+    private int interessiertAnTierID;
 
     public Long getId() {
         return id;
@@ -76,16 +77,12 @@ public class Interessent extends PanacheEntity {
         return hatKinder;
     }
 
-    public void setHatKinder(Boolean hasKids) {
-        this.hatKinder = hasKids;
+    public void setHatKinder(Boolean hatKinder) {
+        this.hatKinder = hatKinder;
     }
 
     public Wohnlage getWohnlage() {
         return wohnlage;
-    }
-
-    public void setLocation(Wohnlage wohnlage) {
-        this.wohnlage = wohnlage;
     }
 
     public OtherAnimals getAndereTiere() {
@@ -94,5 +91,17 @@ public class Interessent extends PanacheEntity {
 
     public void setAndereTiere(OtherAnimals andereTiere) {
         this.andereTiere = andereTiere;
+    }
+
+    public void setWohnlage(Wohnlage wohnlage) {
+        this.wohnlage = wohnlage;
+    }
+
+    public int getInteressiertAnTierID() {
+        return interessiertAnTierID;
+    }
+
+    public void setInteressiertAnTierID(int interessiertAnTierID) {
+        this.interessiertAnTierID = interessiertAnTierID;
     }
 }
