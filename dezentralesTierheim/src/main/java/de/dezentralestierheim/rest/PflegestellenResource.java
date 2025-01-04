@@ -11,6 +11,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @Path("/pflegestellen")
 public class PflegestellenResource {
@@ -39,6 +41,34 @@ public class PflegestellenResource {
 
         // 201 created
         return Response.status(Response.Status.CREATED).entity(pflegestelle.id).build();
+    }
+
+    // Ändere Aufnahmebereitschaft der Pflegestelle
+    @PUT
+    @Path("/{id}/Aufnahmebereit")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response changeAufnahmebereit(@PathParam("id") Long pflegestellenId, Map<String, Boolean> body) {
+        Pflegestelle pflegestelle = pflegestellenRepository.findById(pflegestellenId);
+
+        // Pflegestelle nicht gefunden
+        if (pflegestelle == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Pflegestelle mit ID " + pflegestellenId + " nicht gefunden.")
+                    .build();
+        }
+
+        if (!body.containsKey("aufnahmebereit")) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("'aufnahmebereit' nicht angegeben.")
+                    .build();
+        }
+
+        Boolean aufnahmebereit = body.get("aufnahmebereit");
+        pflegestelle.setAufnahmebereit(aufnahmebereit);
+
+        return Response.ok("Pflegestelle " + pflegestellenId + " wurde auf 'aufnahmebereit' = " + aufnahmebereit + " gesetzt.")
+                .build();
     }
 
     @PUT
@@ -111,6 +141,41 @@ public class PflegestellenResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Es wurde keine freie Pflegestelle gefunden").build();
         }
         return Response.status(Response.Status.OK).entity(pflegestelle.getName()).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    public Response getTier(@PathParam("id") Long id) {
+        Pflegestelle p = pflegestellenRepository.findById(id);
+
+        // Pflegestelle existiert nicht
+        if (p == null) {
+            throw new NotFoundException(Response.status(Response.Status.NOT_FOUND)
+                    .entity("Pflegestelle " + id + " nicht gefunden")
+                    .build());
+        }
+
+        // Pflegestelle existiert
+        return Response.ok(p)
+                .header("Cache-Control", "max-age=300")
+                .build();
+    }
+
+    @GET
+    public Response getTiere() {
+        List<Pflegestelle> p = pflegestellenRepository.listAll();
+
+        // Keine Pflegestellen gelistet
+        if (p.isEmpty()) {
+            return Response.status(Response.Status.NO_CONTENT)
+                    .entity("Keine Pflegestellen gelistet")
+                    .build();
+        }
+
+        // mind. 1 Tier gelistet 200
+        return Response.ok(p)
+                .header("Cache-Control", "max-age=300")
+                .build();
     }
 
 }

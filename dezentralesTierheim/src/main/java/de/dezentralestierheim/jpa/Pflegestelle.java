@@ -18,16 +18,15 @@ public class Pflegestelle extends PanacheEntity {
 
     private String adresse;
 
-    private boolean nurGesund; //Pflegestelle nimmt nur gesunde Tiere auf
+    private boolean nurGesund; // Pflegestelle nimmt nur gesunde Tiere auf
 
-    // TODO: Stimmt der Kommentar? Oder kann man das mit 9999 weglassen? Sonst wäre kapazität ja unnötig?
-    private LocalDate zuletztBelegtAm; //Datum, an dem Pflegestelle zuletzt ein Tier bekommen hat (wenn mindestens ein Tier, dann Datum = 9999-12-31)
+    private LocalDate zuletztBelegtAm; // Datum, an dem Pflegestelle zuletzt ein Tier bekommen hat
 
-    private int kapazitaet; //So viele Tiere sind aktuell auf Pflegestelle
+    private int kapazitaet; // So viele Tiere sind aktuell auf Pflegestelle
 
-    private int maxKapazitaet; //So viele Tiere möchte Pflegestelle maximal aufnehmen
+    private int maxKapazitaet; // So viele Tiere möchte Pflegestelle maximal aufnehmen
 
-    private boolean aufnahmebereit;
+    private boolean aufnahmebereit = true;
 
     public Long getId() {
         return id;
