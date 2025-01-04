@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 public class Pflegestelle extends PanacheEntity {
 
-    public enum Tierart{
+    public enum Tierart {
         HUND,
         KATZE
     }
@@ -20,11 +20,12 @@ public class Pflegestelle extends PanacheEntity {
     private String name;
     private String email;
     private String adresse;
-    private boolean nurGesund; //Pflegestelle nimmt nur gesunde Tiere auf
-    private LocalDate zuletztBelegtAm; //Datum, an dem Pflegestelle zuletzt ein Tier bekommen hat (wenn mindestens ein Tier, dann Datum = 9999-12-31)
-    private int kapazitaet; //So viele Tiere sind aktuell auf Pflegestelle
-    private int maxKapazitaet; //So viele Tiere möchte Pflegestelle maximal aufnehmen
-
+    private boolean nurGesund; // Pflegestelle nimmt nur gesunde Tiere auf
+    // TODO: Stimmt der Kommentar? Oder kann man das mit 9999 weglassen? Sonst wäre kapazität ja unnötig?
+    private LocalDate zuletztBelegtAm; // Datum, an dem Pflegestelle zuletzt ein Tier bekommen hat (wenn mindestens ein Tier, dann Datum = 9999-12-31)
+    private int kapazitaet; // So viele Tiere sind aktuell auf Pflegestelle
+    private int maxKapazitaet; // So viele Tiere möchte Pflegestelle maximal aufnehmen
+    private boolean aufnahmebereit;
 
     public Long getId() {
         return id;
@@ -92,5 +93,13 @@ public class Pflegestelle extends PanacheEntity {
 
     public void setMaxKapazitaet(int maxKapazitaet) {
         this.maxKapazitaet = maxKapazitaet;
+    }
+
+    public boolean getAufnahmebereit() {
+        return aufnahmebereit;
+    }
+
+    public void setAufnahmebereit(boolean aufnahmebereit) {
+        this.aufnahmebereit = aufnahmebereit;
     }
 }
