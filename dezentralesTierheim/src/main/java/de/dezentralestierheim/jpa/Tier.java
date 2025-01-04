@@ -23,17 +23,24 @@ public class Tier extends PanacheEntity {
     }
 
     private String name;
+
     private Long pflegestellenID;
+
     private String inseratText;
+
     @Enumerated(EnumType.STRING)
     private Tierart tierart;
+
     private String rasse;
     private Boolean istKinderfreundlich;
     private Boolean vertraegtSichMitAnderenTieren;
+
     @Enumerated(EnumType.STRING)
     private Status status;
+
     private LocalDate geburtsdatum;
     private Boolean istAdoptiert;
+
     @Enumerated(EnumType.STRING)
     private AufnahmeNichtMoeglich aufnahmeNichtMoeglich; //Wenn Pflegestellen keine Kapazität haben oder wenn Aufnahme von Tierbesitzer abgebrochen wurde
     //Wie machen wir das mit dem Bild?
