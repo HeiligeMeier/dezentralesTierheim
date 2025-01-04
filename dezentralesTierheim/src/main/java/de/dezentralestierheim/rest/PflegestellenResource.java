@@ -121,7 +121,7 @@ public class PflegestellenResource {
     }
 
     @POST
-    @Path("/finden")
+    @Path("/auswaehlen")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public Response freiePflegestelleFinden(Tier tier) {
@@ -131,7 +131,7 @@ public class PflegestellenResource {
         if (tier.getStatus() == Tier.Status.TOT || (tier.getAufnahmeNichtMoeglich() != null && tier.getAufnahmeNichtMoeglich() != Tier.AufnahmeNichtMoeglich.FALSE)) {
             return Response.status(Response.Status.BAD_REQUEST).entity(tier.getStatus() == Tier.Status.TOT ? "Tier ist tot" : "Aufnahme ist nicht mehr möglich").build();
         }
-        String queryString = "tierart = ?1 and kapazitaet > 0";
+        String queryString = "tierart = ?1 and aufnahmebereit = true and kapazitaet > 0";
         if (tier.getStatus() == Tier.Status.KRANK) {
             queryString += " and nurGesund = false";
         }
@@ -140,6 +140,10 @@ public class PflegestellenResource {
         if (pflegestelle == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Es wurde keine freie Pflegestelle gefunden").build();
         }
+        // Pflegestelle nicht mehr aufnahmebereit, da schon angefragt wird
+        pflegestelle.setAufnahmebereit(false);
+        pflegestellenRepository.persist(pflegestelle);
+
         return Response.status(Response.Status.OK).entity(pflegestelle.getName()).build();
     }
 

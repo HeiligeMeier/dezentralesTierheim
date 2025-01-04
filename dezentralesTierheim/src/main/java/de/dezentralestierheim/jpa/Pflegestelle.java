@@ -1,6 +1,7 @@
 package de.dezentralestierheim.jpa;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,7 +27,8 @@ public class Pflegestelle extends PanacheEntity {
 
     private int maxKapazitaet; // So viele Tiere möchte Pflegestelle maximal aufnehmen
 
-    private boolean aufnahmebereit = true;
+    @Column(columnDefinition = "boolean default true")
+    private boolean aufnahmebereit;
 
     public Long getId() {
         return id;
