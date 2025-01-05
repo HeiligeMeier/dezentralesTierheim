@@ -40,7 +40,6 @@ public class Interessent extends PanacheEntity {
         return id;
     }
 
-
     public String getName() {
         return name;
     }
@@ -80,17 +79,17 @@ public class Interessent extends PanacheEntity {
     public void setHatKinder(Boolean hatKinder) {
         this.hatKinder = hatKinder;
     }
-
-    public Wohnlage getWohnlage() {
-        return wohnlage;
-    }
-
+    
     public OtherAnimals getAndereTiere() {
         return andereTiere;
     }
 
     public void setAndereTiere(OtherAnimals andereTiere) {
         this.andereTiere = andereTiere;
+    }
+
+    public Wohnlage getWohnlage() {
+        return wohnlage;
     }
 
     public void setWohnlage(Wohnlage wohnlage) {
@@ -104,4 +103,5 @@ public class Interessent extends PanacheEntity {
     public void setInteressiertAnTierID(Long interessiertAnTierID) {
         this.interessiertAnTierID = interessiertAnTierID;
     }
+
 }

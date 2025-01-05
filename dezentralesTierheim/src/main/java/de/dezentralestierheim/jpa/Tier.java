@@ -43,7 +43,6 @@ public class Tier extends PanacheEntity {
 
     @Enumerated(EnumType.STRING)
     private AufnahmeNichtMoeglich aufnahmeNichtMoeglich; //Wenn Pflegestellen keine Kapazität haben oder wenn Aufnahme von Tierbesitzer abgebrochen wurde
-    //Wie machen wir das mit dem Bild?
 
     public Long getId() {
         return id;
@@ -55,18 +54,6 @@ public class Tier extends PanacheEntity {
 
     public void setPflegestellenID(Long pflegestellenID) {
         this.pflegestellenID = pflegestellenID;
-    }
-
-    public String getInseratText() {
-        return inseratText;
-    }
-
-    public void setInseratText(String inseratText) {
-        this.inseratText = inseratText;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public Tierart getTierart() {
@@ -105,6 +92,10 @@ public class Tier extends PanacheEntity {
         return status;
     }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public Boolean getIstKinderfreundlich() {
         return istKinderfreundlich;
     }
@@ -136,6 +127,5 @@ public class Tier extends PanacheEntity {
     public void setVertraegtSichMitAnderenTieren(Boolean vertraegtSichMitAnderenTieren) {
         this.vertraegtSichMitAnderenTieren = vertraegtSichMitAnderenTieren;
     }
-
 
 }
