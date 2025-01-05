@@ -21,6 +21,7 @@ public class InteressentenResource {
         this.tierRepository = tierRepository;
     }
 
+    // Melanie
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
@@ -32,6 +33,7 @@ public class InteressentenResource {
         return Response.status(Response.Status.CREATED).entity(interessent.id).build();
     }
 
+    // Melanie
     @GET
     @Path("/{id}/check-eligibility")
     @Produces(MediaType.APPLICATION_JSON)

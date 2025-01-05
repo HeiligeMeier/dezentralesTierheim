@@ -24,6 +24,7 @@ public class TierResource {
         this.pflegestelleRepository = pflegestelleRepository;
     }
 
+    // Melanie
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
@@ -35,6 +36,7 @@ public class TierResource {
         return Response.status(Response.Status.CREATED).entity(tier.id).build();
     }
 
+    // Melanie
     @PUT
     @Path("/{id}/verstorben")
     @Consumes(MediaType.APPLICATION_JSON)

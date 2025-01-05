@@ -23,6 +23,7 @@ public class PflegestellenResource {
         this.pflegestellenRepository = pflegestellenRepository;
     }
 
+    // Melanie
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
@@ -43,7 +44,7 @@ public class PflegestellenResource {
         return Response.status(Response.Status.CREATED).entity(pflegestelle.id).build();
     }
 
-    // Ändere Aufnahmebereitschaft der Pflegestelle
+    // Stefan
     @PUT
     @Path("/{id}/Aufnahmebereit")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -71,6 +72,7 @@ public class PflegestellenResource {
                 .build();
     }
 
+    // Melanie
     @PUT
     @Path("/{id}/besetzen")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -96,6 +98,7 @@ public class PflegestellenResource {
         return Response.status(Response.Status.OK).build();
     }
 
+    // Melanie
     @PUT
     @Path("/{id}/erhoehen")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -120,6 +123,7 @@ public class PflegestellenResource {
         return Response.status(Response.Status.OK).build();
     }
 
+    // Raluca
     @POST
     @Path("/auswaehlen")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -147,9 +151,10 @@ public class PflegestellenResource {
         return Response.status(Response.Status.OK).entity(pflegestelle.getName()).build();
     }
 
+    // Stefan
     @GET
     @Path("/{id}")
-    public Response getTier(@PathParam("id") Long id) {
+    public Response getPflegestelle(@PathParam("id") Long id) {
         Pflegestelle p = pflegestellenRepository.findById(id);
 
         // Pflegestelle existiert nicht
@@ -165,8 +170,9 @@ public class PflegestellenResource {
                 .build();
     }
 
+    // Stefan
     @GET
-    public Response getTiere() {
+    public Response getPflegestellen() {
         List<Pflegestelle> p = pflegestellenRepository.listAll();
 
         // Keine Pflegestellen gelistet

@@ -24,6 +24,7 @@ public class InseratResource {
         this.tierRepository = tierRepository;
     }
 
+    // Stefan
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
@@ -55,6 +56,7 @@ public class InseratResource {
                 .build();
     }
 
+    // Stefan
     @PUT
     @Path("/{id}/status")
     @Transactional
@@ -82,6 +84,7 @@ public class InseratResource {
                 .build();
     }
 
+    // Stefan
     @GET
     @Path("/{id}")
     public Response getInserat(@PathParam("id") Long id) {
@@ -100,6 +103,7 @@ public class InseratResource {
                 .build();
     }
 
+    // Stefan
     @GET
     public Response getInserate(@QueryParam("istAktiv") Boolean istAktiv) {
         List<Inserat> inserate;
