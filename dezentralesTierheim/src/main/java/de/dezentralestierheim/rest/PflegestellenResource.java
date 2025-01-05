@@ -135,7 +135,7 @@ public class PflegestellenResource {
     }
 
     // Raluca
-    @GET
+    @PUT
     @Path("/auswaehlen/tier/{id}")
     @Transactional
     public Response freiePflegestelleAuswahl(@PathParam("id") Long tierId) {
