@@ -153,7 +153,7 @@ public class PflegestellenResource {
 
         Pflegestelle pflegestelle = pflegestellenRepository.find(queryString, Sort.by("zuletztBelegtAm"), tier.getTierart()).firstResult();
         if (pflegestelle == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Es wurde keine freie Pflegestelle gefunden").build();
+            return Response.status(Response.Status.OK).build();
         }
         // Pflegestelle nicht mehr aufnahmebereit, da schon angefragt wird
         pflegestelle.setAufnahmebereit(false);
