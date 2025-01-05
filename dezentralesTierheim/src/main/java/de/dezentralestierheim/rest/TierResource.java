@@ -1,5 +1,8 @@
 package de.dezentralestierheim.rest;
 
+import de.dezentralestierheim.dto.TierUpdateDto;
+import de.dezentralestierheim.jpa.Pflegestelle;
+import de.dezentralestierheim.jpa.PflegestelleRepository;
 import de.dezentralestierheim.jpa.Tier;
 import de.dezentralestierheim.jpa.TierRepository;
 import jakarta.inject.Inject;
@@ -13,10 +16,12 @@ import java.util.List;
 @Path("/tiere")
 public class TierResource {
     private final TierRepository tierRepository;
+    private final PflegestelleRepository pflegestelleRepository;
 
     @Inject
-    public TierResource(TierRepository tierRepository) {
+    public TierResource(TierRepository tierRepository, PflegestelleRepository pflegestelleRepository) {
         this.tierRepository = tierRepository;
+        this.pflegestelleRepository = pflegestelleRepository;
     }
 
     @POST
@@ -49,6 +54,7 @@ public class TierResource {
         return Response.status(Response.Status.OK).build();
     }
 
+    // Stefan
     @PUT
     @Path("/{id}/rueckzieher")
     @Transactional
@@ -69,6 +75,7 @@ public class TierResource {
                 .build();
     }
 
+    // Stefan
     @PUT
     @Path("/{id}/adopted")
     @Transactional
@@ -89,6 +96,7 @@ public class TierResource {
                 .build();
     }
 
+    // Stefan
     @GET
     @Path("/{id}")
     public Response getTier(@PathParam("id") Long id) {
@@ -107,6 +115,7 @@ public class TierResource {
                 .build();
     }
 
+    // Stefan
     @GET
     public Response getTiere() {
         List<Tier> tiere = tierRepository.listAll();
@@ -124,4 +133,48 @@ public class TierResource {
                 .build();
     }
 
+    // Raluca
+    @PATCH
+    @Path("/{id}")
+    @Transactional
+    public Response pflegestellenIdAktualisieren(@PathParam("id") Long tierId, TierUpdateDto toUpdateFields) {
+        Tier tier = tierRepository.findById(tierId);
+
+        if (tier == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Es wurde kein Tier mit dieser Id gefunden").build();
+        }
+
+        Long pflegestelleId = toUpdateFields.getPflegestellenID();
+
+        if (pflegestelleId == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("PflegestellenID fehlt.").build();
+        }
+
+        Pflegestelle pflegestelle = pflegestelleRepository.findById(pflegestelleId);
+        if (pflegestelle == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Pflegestelle existiert nicht.").build();
+        }
+        tier.setPflegestellenID(pflegestelleId);
+
+        tierRepository.persist(tier);
+
+        return Response.status(Response.Status.OK).entity(tier).build();
+    }
+
+    // Raluca
+    @GET
+    @Path("/{id}/istAdoptiert")
+    public Response istTierAdoptiert(@PathParam("id") Long id) {
+        Tier tier = tierRepository.findById(id);
+
+        // Tier existiert nicht
+        if (tier == null) {
+            throw new NotFoundException(Response.status(Response.Status.NOT_FOUND)
+                    .entity("Tier " + id + " nicht gefunden")
+                    .build());
+        }
+
+        // Tier existiert
+        return Response.ok(tier.getIstAdoptiert()).build();
+    }
 }
