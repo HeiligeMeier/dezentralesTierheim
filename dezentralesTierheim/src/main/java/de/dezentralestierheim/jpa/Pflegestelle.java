@@ -28,7 +28,7 @@ public class Pflegestelle extends PanacheEntity {
     private int maxKapazitaet; // So viele Tiere möchte Pflegestelle maximal aufnehmen
 
     @Column(columnDefinition = "boolean default true")
-    private boolean aufnahmebereit;
+    private boolean aufnahmebereit = true;
 
     public Long getId() {
         return id;
