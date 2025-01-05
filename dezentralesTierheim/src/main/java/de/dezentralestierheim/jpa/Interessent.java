@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 public class Interessent extends PanacheEntity {
 
-    public enum Wohnlage{
+    public enum Wohnlage {
         SEHR_RUHIG,//("Ländliche Gegend, keine Hauptstraße im Umkreis von 2km"),
         RUHIG,//("Ländliche Gegend, keine Hauptstraße im Umkreis von 1km")
         NORMAL,//("Größeres Dorf, wenig Verkehr, keine Hauptstrasse in unmittelbarer Nähe")
@@ -18,7 +18,7 @@ public class Interessent extends PanacheEntity {
         STARKER_VERKEHR//("Stadt, viel Verkehr oder Hauptstraße direkt am Wohnort.")
     }
 
-    public enum OtherAnimals{
+    public enum OtherAnimals {
         HUND,
         KATZE,
         NAGETIERE,
@@ -26,14 +26,21 @@ public class Interessent extends PanacheEntity {
     }
 
     private String name;
+
+    private String email;
+
     private LocalDate geburtsdatum;
+
     @Enumerated(EnumType.STRING)
     private Wohnlage wohnlage;
+
     private Boolean gartenOderBalkon;
     private int quadratmeter;
     private Boolean hatKinder;
+
     @Enumerated(EnumType.STRING)
     private OtherAnimals andereTiere;
+
     private Long interessiertAnTierID;
 
     public Long getId() {
@@ -46,6 +53,14 @@ public class Interessent extends PanacheEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public LocalDate getGeburtsdatum() {

@@ -1,35 +1,91 @@
 package de.dezentralestierheim.routes;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.dezentralestierheim.dto.MailDto;
-import de.dezentralestierheim.jpa.Tier;
-import io.quarkus.logging.Log;
+import de.dezentralestierheim.dto.MailRequestDto;
 import jakarta.enterprise.context.ApplicationScoped;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
-import org.apache.camel.model.dataformat.JacksonXMLDataFormat;
 
 @ApplicationScoped
 public class Route extends RouteBuilder {
-
     @Override
     public void configure() throws Exception {
 
-        JacksonDataFormat jsonFormat = new JacksonDataFormat(Tier.class);
+        JacksonDataFormat jsonFormat = new JacksonDataFormat(MailRequestDto.class);
+        jsonFormat.addModule(new JavaTimeModule());
 
+        // Nachrichten an die Pflegestelle
         from("activemq:queue:pflegestelle-benachrichtigen")
                 .unmarshal(jsonFormat)
                 .process(exchange -> {
-                    Tier tier = exchange.getMessage().getBody(Tier.class);
+                    MailRequestDto mailRequestDto = exchange.getMessage().getBody(MailRequestDto.class);
+
+                    // E-Mail erstellen
                     MailDto mail = new MailDto();
-                    mail.setFrom("dezentralestierheim@gmail.com");
-                    mail.setTo("dezentralestierheim@gmail.com");
-                    mail.setSubject("Benachrichtigen");
-                    String msg = "Guten Tag, ";
-                    msg += tier.getName();
+                    mail.setFrom("tierheim@gmail.com");
+                    mail.setTo(mailRequestDto.getPflegestelle().getEmail());
+
+                    mail.setSubject(mailRequestDto.getSubject());
+                    String msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", ";
+
+                    msg += mailRequestDto.getBody();
                     mail.setBody(msg);
                     exchange.getMessage().setBody(mail);
+
+                    String fileName = mailRequestDto.getPflegestelle().getName() + "-" + mailRequestDto.getSubject() + ".xml";
+                    exchange.getIn().setHeader(Exchange.FILE_NAME, fileName);
                 })
                 .marshal().jacksonXml(MailDto.class)
-                .to("file:messages/out?fileName=test.xml&noop=true");
+                .to("file:messages/pflegestelle?noop=true");
+
+        // Nachrichten an dem Interessenten
+        from("activemq:queue:interessent-benachrichtigen")
+                .unmarshal(jsonFormat)
+                .process(exchange -> {
+                    MailRequestDto mailRequestDto = exchange.getMessage().getBody(MailRequestDto.class);
+
+                    // E-Mail erstellen
+                    MailDto mail = new MailDto();
+                    mail.setFrom("tierheim@gmail.com");
+                    mail.setTo(mailRequestDto.getInteressent().getEmail());
+                    mail.setSubject(mailRequestDto.getSubject());
+
+                    String msg = "Guten Tag " + mailRequestDto.getInteressent().getName() + ", ";
+
+                    msg += mailRequestDto.getBody();
+                    mail.setBody(msg);
+                    exchange.getMessage().setBody(mail);
+
+                    String fileName = mailRequestDto.getInteressent().getName() + "-" + mailRequestDto.getSubject() + ".xml";
+                    exchange.getIn().setHeader(Exchange.FILE_NAME, fileName);
+                })
+                .marshal().jacksonXml(MailDto.class)
+                .to("file:messages/interessent?noop=true");
+
+        // Nachrichten an dem Tierbesitzer
+        from("activemq:queue:tierbesitzer-benachrichtigen")
+                .unmarshal(jsonFormat)
+                .process(exchange -> {
+                    MailRequestDto mailRequestDto = exchange.getMessage().getBody(MailRequestDto.class);
+
+                    // E-Mail erstellen
+                    MailDto mail = new MailDto();
+                    mail.setFrom("tierheim@gmail.com");
+                    mail.setTo(mailRequestDto.getTier().getTierBesitzerEmail());
+                    mail.setSubject(mailRequestDto.getSubject());
+
+                    String msg = "Guten Tag, ";
+
+                    msg += mailRequestDto.getBody();
+                    mail.setBody(msg);
+                    exchange.getMessage().setBody(mail);
+
+                    String fileName = mailRequestDto.getTier().getTierBesitzerEmail() + "-" + mailRequestDto.getSubject() + ".xml";
+                    exchange.getIn().setHeader(Exchange.FILE_NAME, fileName);
+                })
+                .marshal().jacksonXml(MailDto.class)
+                .to("file:messages/tierbesitzer?noop=true");
     }
 }

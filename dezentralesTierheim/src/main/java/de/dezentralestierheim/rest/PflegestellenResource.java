@@ -128,7 +128,7 @@ public class PflegestellenResource {
     @Path("/auswaehlen")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response freiePflegestelleFinden(Tier tier) {
+    public Response freiePflegestelleAuswahl(Tier tier) {
         if (tier == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Keine Tierdaten").build();
         }
@@ -148,7 +148,7 @@ public class PflegestellenResource {
         pflegestelle.setAufnahmebereit(false);
         pflegestellenRepository.persist(pflegestelle);
 
-        return Response.status(Response.Status.OK).entity(pflegestelle.getName()).build();
+        return Response.status(Response.Status.OK).entity(pflegestelle).build();
     }
 
     // Stefan

@@ -26,8 +26,6 @@ public class Tier extends PanacheEntity {
 
     private Long pflegestellenID;
 
-    private String inseratText;
-
     @Enumerated(EnumType.STRING)
     private Tierart tierart;
 
@@ -43,6 +41,8 @@ public class Tier extends PanacheEntity {
 
     @Enumerated(EnumType.STRING)
     private AufnahmeNichtMoeglich aufnahmeNichtMoeglich; //Wenn Pflegestellen keine Kapazität haben oder wenn Aufnahme von Tierbesitzer abgebrochen wurde
+
+    private String tierBesitzerEmail;
 
     public Long getId() {
         return id;
@@ -128,4 +128,11 @@ public class Tier extends PanacheEntity {
         this.vertraegtSichMitAnderenTieren = vertraegtSichMitAnderenTieren;
     }
 
+    public String getTierBesitzerEmail() {
+        return tierBesitzerEmail;
+    }
+
+    public void setTierBesitzerEmail(String tierBesitzerEmail) {
+        this.tierBesitzerEmail = tierBesitzerEmail;
+    }
 }
