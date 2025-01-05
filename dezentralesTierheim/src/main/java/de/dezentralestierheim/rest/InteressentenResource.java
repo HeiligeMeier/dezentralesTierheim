@@ -47,7 +47,11 @@ public class InteressentenResource {
         // Fetch Tier
         Tier tier = tierRepository.findById(interessent.getInteressiertAnTierID());
         if (tier == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Tier nicht gefunden.").build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Tier existiert nicht in unserem Tierschutzverein.").build();
+        }
+
+        if (tier.getIstAdoptiert()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Tier wurde bereits adoptiert.").build();
         }
 
         // Check Alter

@@ -97,6 +97,14 @@ public class PflegestellenResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
+        // vorübergehende Markierung der Pflegestelle auf false während Auswahlprozess rückgängig machen
+        if(!pflegestelle.getAufnahmebereit()){
+            pflegestelle.setAufnahmebereit(true);
+        }
+
+        // Pflegestelle als zuletzt belegt am mit heutigen Datum markieren
+        pflegestelle.setZuletztBelegtAm(LocalDate.now());
+
         // Pflegestelle erfolgreich besetzt 200
         return Response.status(Response.Status.OK).build();
     }

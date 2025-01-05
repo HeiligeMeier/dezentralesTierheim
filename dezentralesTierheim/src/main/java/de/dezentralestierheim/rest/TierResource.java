@@ -33,7 +33,7 @@ public class TierResource {
         tierRepository.persist(tier);
 
         // 201 created
-        return Response.status(Response.Status.CREATED).entity(tier.id).build();
+        return Response.status(Response.Status.CREATED).entity(tier).build();
     }
 
     // Melanie
@@ -55,6 +55,27 @@ public class TierResource {
 
         return Response.status(Response.Status.OK).build();
     }
+
+    @PUT
+    @Path("/{id}/keineKapazitaet")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response keineKapazitaet(@PathParam("id") Long tierId) {
+
+        // Tier existiert nicht 404
+        if (tierRepository.findById(tierId) == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Tier tier = tierRepository.findById(tierId);
+
+        // Tier als verstorben markieren
+        tier.setAufnahmeNichtMoeglich(Tier.AufnahmeNichtMoeglich.KEINE_KAPAZITAET);
+
+        return Response.status(Response.Status.OK).build();
+    }
+
+
 
     // Stefan
     @PUT
@@ -179,4 +200,5 @@ public class TierResource {
         // Tier existiert
         return Response.ok(tier.getIstAdoptiert()).build();
     }
+
 }
