@@ -137,6 +137,7 @@ public class PflegestellenResource {
     // Raluca
     @GET
     @Path("/auswaehlen/tier/{id}")
+    @Transactional
     public Response freiePflegestelleAuswahl(@PathParam("id") Long tierId) {
         Tier tier = tierRepository.findById(tierId);
 
