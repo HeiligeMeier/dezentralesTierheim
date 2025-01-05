@@ -3,6 +3,7 @@ package de.dezentralestierheim.rest;
 import de.dezentralestierheim.jpa.Pflegestelle;
 import de.dezentralestierheim.jpa.PflegestelleRepository;
 import de.dezentralestierheim.jpa.Tier;
+import de.dezentralestierheim.jpa.TierRepository;
 import io.quarkus.panache.common.Sort;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -17,10 +18,12 @@ import java.util.Map;
 @Path("/pflegestellen")
 public class PflegestellenResource {
     private final PflegestelleRepository pflegestellenRepository;
+    private final TierRepository tierRepository;
 
     @Inject
-    public PflegestellenResource(PflegestelleRepository pflegestellenRepository) {
+    public PflegestellenResource(PflegestelleRepository pflegestellenRepository, TierRepository tierRepository) {
         this.pflegestellenRepository = pflegestellenRepository;
+        this.tierRepository = tierRepository;
     }
 
     // Melanie
@@ -124,11 +127,11 @@ public class PflegestellenResource {
     }
 
     // Raluca
-    @POST
-    @Path("/auswaehlen")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Response freiePflegestelleAuswahl(Tier tier) {
+    @GET
+    @Path("/auswaehlen/tier/{id}")
+    public Response freiePflegestelleAuswahl(@PathParam("id") Long tierId) {
+        Tier tier = tierRepository.findById(tierId);
+
         if (tier == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Keine Tierdaten").build();
         }
