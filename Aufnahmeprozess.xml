@@ -29,7 +29,7 @@
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1garmhn" associationDirection="None" sourceRef="Activity_0ames9m" targetRef="TextAnnotation_0bqyu30" />
     <bpmn:association id="Association_004rxri" associationDirection="None" sourceRef="Activity_1tbaymw" targetRef="TextAnnotation_0sf36uk" />
-    <bpmn:correlationKey id="CorrelationKey_1mvvxxg" name="MainCorrelationKey" />
+    <bpmn:correlationKey id="CorrelationKey_19h25eg" name="MainCorrelationKey" />
   </bpmn:collaboration>
   <bpmn:process id="Process_dpe_projekt_pnp8oth" isExecutable="true">
     <bpmn:subProcess id="Activity_0ames9m">
@@ -107,14 +107,14 @@ endereignis = "Pflegestelle gefunden"</bpmn:script>
       <bpmn:boundaryEvent id="Event_1q30kty" name="Nach 15 Stunden" attachedToRef="Activity_08t88zk">
         <bpmn:outgoing>Flow_16f0x6k</bpmn:outgoing>
         <bpmn:timerEventDefinition id="TimerEventDefinition_1l476k7">
-          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">"PT15H"</bpmn:timeDuration>
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">"PT1M"</bpmn:timeDuration>
         </bpmn:timerEventDefinition>
       </bpmn:boundaryEvent>
       <bpmn:sequenceFlow id="Flow_16f0x6k" sourceRef="Event_1q30kty" targetRef="Gateway_0zj3jgn" />
       <bpmn:boundaryEvent id="Event_00m3rhi" name="Alle 3 Stunden" cancelActivity="false" attachedToRef="Activity_08t88zk">
         <bpmn:outgoing>Flow_1lfqlis</bpmn:outgoing>
         <bpmn:timerEventDefinition id="TimerEventDefinition_02dw2u5">
-          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">"PT3H"</bpmn:timeDuration>
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">"PT20S"</bpmn:timeDuration>
         </bpmn:timerEventDefinition>
       </bpmn:boundaryEvent>
       <bpmn:sequenceFlow id="Flow_1lfqlis" sourceRef="Event_00m3rhi" targetRef="Activity_04jn63t" />
@@ -169,9 +169,24 @@ foundPflegestelle = pflegestelle</spiffworkflow:postScript>
       </bpmn:startEvent>
       <bpmn:sequenceFlow id="Flow_0xrkdrp" sourceRef="Event_1req4s7" targetRef="Activity_0diyaqa" />
       <bpmn:sendTask id="Activity_04jn63t" name="Erinnerung an Pflegestelle senden" messageRef="pflegestelle-benachrichtigen">
-        <bpmn:extensionElements />
+        <bpmn:extensionElements>
+          <spiffworkflow:messagePayload>{
+            "tier": tier,
+            "pflegestelle": pflegestelle,
+            "messageType": "ErinnerungAnfrageTieraufnahme",
+            }</spiffworkflow:messagePayload>
+        </bpmn:extensionElements>
         <bpmn:incoming>Flow_1lfqlis</bpmn:incoming>
         <bpmn:outgoing>Flow_056j0tb</bpmn:outgoing>
+        <bpmn:property id="Property_0slh2p9" name="__targetRef_placeholder" />
+        <bpmn:dataInputAssociation id="DataInputAssociation_1ghapvo">
+          <bpmn:sourceRef>DataObjectReference_177le34</bpmn:sourceRef>
+          <bpmn:targetRef>Property_0slh2p9</bpmn:targetRef>
+        </bpmn:dataInputAssociation>
+        <bpmn:dataInputAssociation id="DataInputAssociation_1tmtlt7">
+          <bpmn:sourceRef>DataObjectReference_16gy9xs</bpmn:sourceRef>
+          <bpmn:targetRef>Property_0slh2p9</bpmn:targetRef>
+        </bpmn:dataInputAssociation>
       </bpmn:sendTask>
       <bpmn:endEvent id="Event_0xiqqf8">
         <bpmn:incoming>Flow_056j0tb</bpmn:incoming>
@@ -257,9 +272,20 @@ foundPflegestelle = pflegestelle</spiffworkflow:postScript>
         <bpmn:outgoing>Flow_0dt8ojs</bpmn:outgoing>
       </bpmn:parallelGateway>
       <bpmn:sequenceFlow id="Flow_0awytba" sourceRef="Activity_1i7ai0h" targetRef="Event_15kg9oh" />
-      <bpmn:sendTask id="Activity_1i7ai0h" name="Bei Pflegestelle Aufnahmebereitschaft für Zukunft abfragen">
+      <bpmn:sendTask id="Activity_1i7ai0h" name="Bei Pflegestelle Aufnahmebereitschaft für Zukunft abfragen" messageRef="pflegestelle-benachrichtigen">
+        <bpmn:extensionElements>
+          <spiffworkflow:messagePayload>{
+            "pflegestelle": pflegestelle,
+            "messageType": "NachfrageBereitschaftAufnahme",
+            }</spiffworkflow:messagePayload>
+        </bpmn:extensionElements>
         <bpmn:incoming>Flow_1pju2wf</bpmn:incoming>
         <bpmn:outgoing>Flow_0awytba</bpmn:outgoing>
+        <bpmn:property id="Property_0xyicxx" name="__targetRef_placeholder" />
+        <bpmn:dataInputAssociation id="DataInputAssociation_1f10hlh">
+          <bpmn:sourceRef>DataObjectReference_177le34</bpmn:sourceRef>
+          <bpmn:targetRef>Property_0xyicxx</bpmn:targetRef>
+        </bpmn:dataInputAssociation>
       </bpmn:sendTask>
       <bpmn:dataObjectReference id="DataObjectReference_177le34" name="pflegestelle" dataObjectRef="pflegestelle" />
       <bpmn:sequenceFlow id="Flow_1lvqtt5" sourceRef="Activity_0diyaqa" targetRef="Gateway_1eks7o2" />
@@ -592,6 +618,10 @@ foundPflegestelle = pflegestelle</spiffworkflow:postScript>
         <di:waypoint x="2269" y="266" />
         <di:waypoint x="2210" y="186" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_1f10hlh_di" bpmnElement="DataInputAssociation_1f10hlh">
+        <di:waypoint x="1118" y="623" />
+        <di:waypoint x="1990" y="288" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Gateway_0xi00vu_di" bpmnElement="Gateway_0xi00vu" isMarkerVisible="true">
         <dc:Bounds x="2555" y="315" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -731,6 +761,14 @@ foundPflegestelle = pflegestelle</spiffworkflow:postScript>
         <di:waypoint x="916" y="478" />
         <di:waypoint x="1082" y="614" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_1ghapvo_di" bpmnElement="DataInputAssociation_1ghapvo">
+        <di:waypoint x="1118" y="630" />
+        <di:waypoint x="1570" y="621" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_1tmtlt7_di" bpmnElement="DataInputAssociation_1tmtlt7">
+        <di:waypoint x="588" y="300" />
+        <di:waypoint x="1570" y="597" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_1cyrybv_di" bpmnElement="DataInputAssociation_1cyrybv">
         <di:waypoint x="1118" y="625" />
         <di:waypoint x="1821" y="413" />
@@ -738,6 +776,10 @@ foundPflegestelle = pflegestelle</spiffworkflow:postScript>
       <bpmndi:BPMNEdge id="DataInputAssociation_18twc68_di" bpmnElement="DataInputAssociation_18twc68">
         <di:waypoint x="588" y="296" />
         <di:waypoint x="1820" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_0s1lp34_di" bpmnElement="DataInputAssociation_0s1lp34">
+        <di:waypoint x="588" y="292" />
+        <di:waypoint x="1490" y="122" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_1jsn511_di" bpmnElement="DataInputAssociation_1jsn511">
         <di:waypoint x="1118" y="628" />
@@ -807,10 +849,6 @@ foundPflegestelle = pflegestelle</spiffworkflow:postScript>
         <bpmndi:BPMNLabel>
           <dc:Bounds x="2352" y="-322" width="56" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataInputAssociation_0s1lp34_di" bpmnElement="DataInputAssociation_0s1lp34">
-        <di:waypoint x="588" y="292" />
-        <di:waypoint x="1490" y="122" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
