@@ -53,6 +53,16 @@ public class Route extends RouteBuilder {
                         "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
+            case "PflegestelleInteressentInformieren":
+
+                mail.setSubject("Anfrage zur Tieraufnahme");
+
+                msg = "Guten Tag Pflegestelle " + mailRequestDto.getInteressent() + ", \n ";
+
+                msg += "Unser Tierschutzverein hat eine Anfrage zur Aufnahme eines Tieres erhalten. \n" +
+                        "Tierart: " + mailRequestDto.getTier().getTierart() + "\n" +
+                        "Name: " + mailRequestDto.getTier().getName() + "\n" +
+                        "Geburtstag: " + mailRequestDto.getTier().getGeburtsdatum() + "\n";
             case "TierbesitzerInformieren":
                 mail.setSubject("Ablehnung der Tieraufnahme");
 
@@ -76,12 +86,12 @@ public class Route extends RouteBuilder {
                         "Ihr Tierschutzverein Musterstadt";
                 mail.setBody(msg);
                 break;
-            case "AntwortInteressent":
+            case "AbsageAdoptionsanfrage":
                 mail.setSubject("");
 
-                msg = "Guten Tag " + mailRequestDto.getInteressent().getName() + ", ";
-
-                msg += "";
+                msg = "Guten Tag " + mailRequestDto.getInteressent().getName() + ", " +
+                        "leider müssen wir Ihnen mitteilen, dass das Tier " + mailRequestDto.getInteressent().getInteressiertAnTierID() + " bereits adoptiert wurde. \n" +
+                        "Wir bitten um Ihr Verständnis. \n";
                 mail.setBody(msg);
                 break;
             default:

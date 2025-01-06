@@ -14,11 +14,15 @@ import java.time.LocalDate;
 public class InteressentenResource {
     private final InteressentRepository interessentenRepository;
     private final TierRepository tierRepository;
+    private final PflegestelleRepository pflegestellenRepository;
+    private final PflegestellenResource pflegestellenResource;
 
     @Inject
-    public InteressentenResource(InteressentRepository interessentenRepository, TierRepository tierRepository) {
+    public InteressentenResource(InteressentRepository interessentenRepository, TierRepository tierRepository, PflegestelleRepository pflegestellenRepository, PflegestellenResource pflegestellenResource) {
         this.interessentenRepository = interessentenRepository;
         this.tierRepository = tierRepository;
+        this.pflegestellenRepository = pflegestellenRepository;
+        this.pflegestellenResource = pflegestellenResource;
     }
 
     // Melanie
@@ -30,14 +34,14 @@ public class InteressentenResource {
         interessentenRepository.persist(interessent);
 
         // 201 created
-        return Response.status(Response.Status.CREATED).entity(interessent.id).build();
+        return Response.status(Response.Status.CREATED).entity(interessent).build();
     }
 
     // Melanie
     @GET
-    @Path("/{id}/check-eligibility")
+    @Path("/{id}/check-eignung")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkInteressentEligibility(@PathParam("id") Long interessentId) {
+    public Response checkInteressentEignung(@PathParam("id") Long interessentId) {
         // Fetch Interessent
         Interessent interessent = interessentenRepository.findById(interessentId);
         if (interessent == null) {
@@ -96,5 +100,27 @@ public class InteressentenResource {
         return Response.ok("{\"geeignet\": \"ja\"}").build();
     }
 
+
+    @GET
+    @Path("/{id}/pflegestelle")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPflegestelleViaInteressent(@PathParam("id") Long interessentId) {
+
+        Interessent interessent = interessentenRepository.findById(interessentId);
+        if (interessent == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Interessent nicht gefunden.").build();
+        }
+
+        Long tierID = interessent.getInteressiertAnTierID();
+        Tier tier = tierRepository.findById(tierID);
+        if (tier == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Tier nicht gefunden.").build();
+        }
+
+        Long pflegestellenId = tier.getPflegestellenID();
+        Pflegestelle pflegestelle = pflegestellenRepository.findById(pflegestellenId);
+
+        return Response.ok(pflegestelle).build();
+    }
 
 }
