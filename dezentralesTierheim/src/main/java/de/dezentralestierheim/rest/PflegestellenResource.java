@@ -98,7 +98,7 @@ public class PflegestellenResource {
         }
 
         // vorübergehende Markierung der Pflegestelle auf false während Auswahlprozess rückgängig machen
-        if(!pflegestelle.getAufnahmebereit()){
+        if (!pflegestelle.getAufnahmebereit()){
             pflegestelle.setAufnahmebereit(true);
         }
 
@@ -134,6 +134,38 @@ public class PflegestellenResource {
 
         pflegestellenRepository.persist(pflegestelle);
         // Pflegestelle erfolgreich besetzt 200
+        return Response.status(Response.Status.OK).build();
+    }
+
+    //
+    @PUT
+    @Path("/fuer-tier/{id}/erhoehen")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response kapazitaetPflegestelleErhoehenByTierId(@PathParam("id") Long tierId) {
+        Tier tier = tierRepository.findById(tierId);
+
+        // Tier existiert nicht 404
+        if (tier == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Pflegestelle pflegestelle = pflegestellenRepository.findById(tier.getPflegestellenID());
+
+        // Pflegestelle existiert nicht 404
+        if (pflegestelle == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        // Kapazität der Pflegestelle anpassen +1 Tier
+        if (pflegestelle.getKapazitaet() < pflegestelle.getMaxKapazitaet()) {
+            pflegestelle.setKapazitaet(pflegestelle.getKapazitaet() + 1);
+        } else {
+            // Pflegestelle hat Max Kapazität schon erreicht
+            return Response.status(Response.Status.OK).build();
+        }
+
+        pflegestellenRepository.persist(pflegestelle);
         return Response.status(Response.Status.OK).build();
     }
 

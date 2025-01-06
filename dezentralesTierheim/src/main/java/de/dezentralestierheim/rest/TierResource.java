@@ -95,7 +95,7 @@ public class TierResource {
 
         tier.setAufnahmeNichtMoeglich(Tier.AufnahmeNichtMoeglich.RUECKZIEHER_VOM_BESITZER);
 
-        if(tier.getPflegestellenID() != null) {
+        if (tier.getPflegestellenID() != null) {
             tier.setPflegestellenID(null);
             Pflegestelle pflegestelle = pflegestelleRepository.findById(tier.getPflegestellenID());
             pflegestelle.setKapazitaet(pflegestelle.getKapazitaet() + 1);

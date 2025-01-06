@@ -15,14 +15,12 @@ public class InteressentenResource {
     private final InteressentRepository interessentenRepository;
     private final TierRepository tierRepository;
     private final PflegestelleRepository pflegestellenRepository;
-    private final PflegestellenResource pflegestellenResource;
 
     @Inject
-    public InteressentenResource(InteressentRepository interessentenRepository, TierRepository tierRepository, PflegestelleRepository pflegestellenRepository, PflegestellenResource pflegestellenResource) {
+    public InteressentenResource(InteressentRepository interessentenRepository, TierRepository tierRepository, PflegestelleRepository pflegestellenRepository) {
         this.interessentenRepository = interessentenRepository;
         this.tierRepository = tierRepository;
         this.pflegestellenRepository = pflegestellenRepository;
-        this.pflegestellenResource = pflegestellenResource;
     }
 
     // Melanie
