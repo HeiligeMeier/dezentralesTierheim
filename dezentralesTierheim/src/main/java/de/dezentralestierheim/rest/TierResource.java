@@ -167,17 +167,17 @@ public class TierResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Es wurde kein Tier mit dieser Id gefunden").build();
         }
 
-        Long pflegestelleId = toUpdateFields.getPflegestellenID();
+        Long pflegestellenId = toUpdateFields.getId();
 
-        if (pflegestelleId == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("PflegestellenID fehlt.").build();
+        if (pflegestellenId == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Feld \"id\" fehlt.").build();
         }
 
-        Pflegestelle pflegestelle = pflegestelleRepository.findById(pflegestelleId);
+        Pflegestelle pflegestelle = pflegestelleRepository.findById(pflegestellenId);
         if (pflegestelle == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Pflegestelle existiert nicht.").build();
         }
-        tier.setPflegestellenID(pflegestelleId);
+        tier.setPflegestellenID(pflegestellenId);
 
         tierRepository.persist(tier);
 

@@ -1,13 +1,13 @@
 package de.dezentralestierheim.dto;
 
 public class TierUpdateDto {
-    private Long pflegestellenID;
+    private Long id;
 
-    public Long getPflegestellenID() {
-        return pflegestellenID;
+    public Long getId() {
+        return id;
     }
 
-    public void setPflegestellenID(Long pflegestellenID) {
-        this.pflegestellenID = pflegestellenID;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

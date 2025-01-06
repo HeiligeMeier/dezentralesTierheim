@@ -105,6 +105,7 @@ public class PflegestellenResource {
         // Pflegestelle als zuletzt belegt am mit heutigen Datum markieren
         pflegestelle.setZuletztBelegtAm(LocalDate.now());
 
+        pflegestellenRepository.persist(pflegestelle);
         // Pflegestelle erfolgreich besetzt 200
         return Response.status(Response.Status.OK).build();
     }
@@ -130,6 +131,8 @@ public class PflegestellenResource {
             // Pflegestelle hat Max Kapazität schon erreicht --> Kapa nicht erhöhen - aber das ist ja okay, muss kein Fehler sein oder?
             return Response.status(Response.Status.OK).build();
         }
+
+        pflegestellenRepository.persist(pflegestelle);
         // Pflegestelle erfolgreich besetzt 200
         return Response.status(Response.Status.OK).build();
     }
