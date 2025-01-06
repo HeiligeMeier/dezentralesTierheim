@@ -49,10 +49,12 @@ public class InseratResource {
                     .build();
         }
 
+        inserat.setIstAktiv(true);
+
         inseratRepository.persist(inserat);
 
         return Response.status(Response.Status.CREATED)
-                .entity(inserat.id)
+                .entity(inserat)
                 .build();
     }
 

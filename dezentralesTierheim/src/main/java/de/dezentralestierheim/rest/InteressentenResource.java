@@ -100,7 +100,7 @@ public class InteressentenResource {
         return Response.ok("{\"geeignet\": \"ja\"}").build();
     }
 
-
+    //Melanie
     @GET
     @Path("/{id}/pflegestelle")
     @Produces(MediaType.APPLICATION_JSON)
