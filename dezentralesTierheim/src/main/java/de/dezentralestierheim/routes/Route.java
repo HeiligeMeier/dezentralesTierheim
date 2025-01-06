@@ -65,6 +65,17 @@ public class Route extends RouteBuilder {
                         "Ihr Tierschutzverein Musterstadt";
                 mail.setBody(msg);
                 break;
+            case "Rueckzieher":
+                mail.setSubject("Tieraufnahme abgebrochen");
+
+                msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", \n ";
+
+                msg += "leider müssen wir Ihnen mitteilen, dass wir das Tier" + mailRequestDto.getTier().getName() + " nicht aufnehmen werden, da der Tierbesitzer die Abgabe abgebrochen hat. \n" +
+                        "Wir bitten um Ihr Verständnis und bitten von weiteren Nachfragen abzusehen. \n" +
+                        "Mit freundlichen Grüßen \n" +
+                        "Ihr Tierschutzverein Musterstadt";
+                mail.setBody(msg);
+                break;
             case "AntwortInteressent":
                 mail.setSubject("");
 

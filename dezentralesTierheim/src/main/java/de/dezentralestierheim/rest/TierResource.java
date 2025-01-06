@@ -53,6 +53,7 @@ public class TierResource {
         // Tier als verstorben markieren
         tier.setStatus(Tier.Status.TOT);
 
+        tierRepository.persist(tier);
         return Response.status(Response.Status.OK).build();
     }
 
@@ -72,6 +73,7 @@ public class TierResource {
         // Tier als verstorben markieren
         tier.setAufnahmeNichtMoeglich(Tier.AufnahmeNichtMoeglich.KEINE_KAPAZITAET);
 
+        tierRepository.persist(tier);
         return Response.status(Response.Status.OK).build();
     }
 
@@ -93,9 +95,18 @@ public class TierResource {
 
         tier.setAufnahmeNichtMoeglich(Tier.AufnahmeNichtMoeglich.RUECKZIEHER_VOM_BESITZER);
 
+        if(tier.getPflegestellenID() != null) {
+            tier.setPflegestellenID(null);
+            Pflegestelle pflegestelle = pflegestelleRepository.findById(tier.getPflegestellenID());
+            pflegestelle.setKapazitaet(pflegestelle.getKapazitaet() + 1);
+            pflegestelleRepository.persist(pflegestelle);
+            tierRepository.persist(tier);
+            return Response.status(Response.Status.OK).entity("Pflegestelle vorhanden").build();
+        }
+
+        tierRepository.persist(tier);
         return Response.status(Response.Status.OK)
-                .entity("Tier " + id + " wurde zurückgezogen")
-                .build();
+                .entity("Keine Pflegestelle vorhanden").build();
     }
 
     // Stefan
@@ -114,6 +125,7 @@ public class TierResource {
 
         tier.setIstAdoptiert(true);
 
+        tierRepository.persist(tier);
         return Response.status(Response.Status.OK)
                 .entity("Tier " + id + " wurde adoptiert")
                 .build();
@@ -149,6 +161,7 @@ public class TierResource {
                     .entity("Keine Tiere gelistet")
                     .build();
         }
+
 
         // mind. 1 Tier gelistet
         return Response.ok(tiere)
