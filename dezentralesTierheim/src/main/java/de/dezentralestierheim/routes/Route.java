@@ -10,6 +10,44 @@ import org.apache.camel.component.jackson.JacksonDataFormat;
 
 @ApplicationScoped
 public class Route extends RouteBuilder {
+
+    private MailDto setMailByMessageType(MailRequestDto mailRequestDto) {
+        MailDto mail = new MailDto();
+        String msg;
+        mail.setFrom("tierheim@gmail.com");
+
+        switch (mailRequestDto.getMessageType()) {
+            case "AnfrageTieraufnahme":
+                mail.setSubject("Anfrage Tieraufnahme");
+
+                msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", ";
+                msg += "";
+                break;
+            case "TierbesitzerInformieren":
+                mail.setSubject("");
+
+                msg = "Guten Tag, ";
+
+                msg += "";
+                mail.setBody(msg);
+                break;
+            case "AntwortInteressent":
+                mail.setSubject("");
+
+                msg = "Guten Tag " + mailRequestDto.getInteressent().getName() + ", ";
+
+                msg += "";
+                mail.setBody(msg);
+                break;
+            default:
+                msg = "";
+        }
+
+        mail.setBody(msg);
+
+        return mail;
+    }
+
     @Override
     public void configure() throws Exception {
 
@@ -23,18 +61,12 @@ public class Route extends RouteBuilder {
                     MailRequestDto mailRequestDto = exchange.getMessage().getBody(MailRequestDto.class);
 
                     // E-Mail erstellen
-                    MailDto mail = new MailDto();
-                    mail.setFrom("tierheim@gmail.com");
+                    MailDto mail = setMailByMessageType(mailRequestDto);
                     mail.setTo(mailRequestDto.getPflegestelle().getEmail());
 
-                    mail.setSubject(mailRequestDto.getSubject());
-                    String msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", ";
-
-                    msg += mailRequestDto.getBody();
-                    mail.setBody(msg);
                     exchange.getMessage().setBody(mail);
 
-                    String fileName = mailRequestDto.getPflegestelle().getName() + "-" + mailRequestDto.getSubject() + ".xml";
+                    String fileName = mailRequestDto.getPflegestelle().getName() + "-" + mailRequestDto.getMessageType() + ".xml";
                     exchange.getIn().setHeader(Exchange.FILE_NAME, fileName);
                 })
                 .marshal().jacksonXml(MailDto.class)
@@ -47,18 +79,11 @@ public class Route extends RouteBuilder {
                     MailRequestDto mailRequestDto = exchange.getMessage().getBody(MailRequestDto.class);
 
                     // E-Mail erstellen
-                    MailDto mail = new MailDto();
-                    mail.setFrom("tierheim@gmail.com");
+                    MailDto mail = setMailByMessageType(mailRequestDto);
                     mail.setTo(mailRequestDto.getInteressent().getEmail());
-                    mail.setSubject(mailRequestDto.getSubject());
-
-                    String msg = "Guten Tag " + mailRequestDto.getInteressent().getName() + ", ";
-
-                    msg += mailRequestDto.getBody();
-                    mail.setBody(msg);
                     exchange.getMessage().setBody(mail);
 
-                    String fileName = mailRequestDto.getInteressent().getName() + "-" + mailRequestDto.getSubject() + ".xml";
+                    String fileName = mailRequestDto.getInteressent().getName() + "-" + mailRequestDto.getMessageType() + ".xml";
                     exchange.getIn().setHeader(Exchange.FILE_NAME, fileName);
                 })
                 .marshal().jacksonXml(MailDto.class)
@@ -71,18 +96,11 @@ public class Route extends RouteBuilder {
                     MailRequestDto mailRequestDto = exchange.getMessage().getBody(MailRequestDto.class);
 
                     // E-Mail erstellen
-                    MailDto mail = new MailDto();
-                    mail.setFrom("tierheim@gmail.com");
+                    MailDto mail = setMailByMessageType(mailRequestDto);
                     mail.setTo(mailRequestDto.getTier().getTierBesitzerEmail());
-                    mail.setSubject(mailRequestDto.getSubject());
-
-                    String msg = "Guten Tag, ";
-
-                    msg += mailRequestDto.getBody();
-                    mail.setBody(msg);
                     exchange.getMessage().setBody(mail);
 
-                    String fileName = mailRequestDto.getTier().getTierBesitzerEmail() + "-" + mailRequestDto.getSubject() + ".xml";
+                    String fileName = mailRequestDto.getTier().getTierBesitzerEmail() + "-" + mailRequestDto.getMessageType() + ".xml";
                     exchange.getIn().setHeader(Exchange.FILE_NAME, fileName);
                 })
                 .marshal().jacksonXml(MailDto.class)

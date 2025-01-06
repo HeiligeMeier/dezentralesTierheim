@@ -9,8 +9,7 @@ public class MailRequestDto {
     private Tier tier;
     private Interessent interessent;
 
-    private String subject;
-    private String body;
+    private String messageType;
 
     public Pflegestelle getPflegestelle() {
         return pflegestelle;
@@ -36,19 +35,11 @@ public class MailRequestDto {
         this.interessent = interessent;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getMessageType() {
+        return messageType;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
     }
 }
