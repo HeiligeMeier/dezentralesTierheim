@@ -10,7 +10,6 @@
     </bpmn:participant>
     <bpmn:participant id="Participant_1dnkt6c" name="Pflegestelle" />
     <bpmn:messageFlow id="Flow_1j4nr5f" name="Anfrage" sourceRef="Participant_1o8cm0y" targetRef="Event_1opryyo" />
-    <bpmn:messageFlow id="Flow_0z7slyj" name="Absage" sourceRef="Event_003ot66" targetRef="Participant_1o8cm0y" />
     <bpmn:messageFlow id="Flow_1rurmzb" name="Tier adoptierbereit" sourceRef="Participant_1dnkt6c" targetRef="Event_0gfy0pz" />
     <bpmn:messageFlow id="Flow_1vo261i" name="Adoptivstelle gefunden" sourceRef="Activity_0hwsj90" targetRef="Event_1yl4iqa" />
     <bpmn:messageFlow id="Flow_1u15yb8" name="Weiterleitung Anfrage an Pflegestelle" sourceRef="Activity_1sbhvgb" targetRef="Participant_1dnkt6c" />
@@ -21,6 +20,7 @@
     <bpmn:messageFlow id="Flow_1xjzhpk" sourceRef="Activity_1v77s0n" targetRef="Participant_1o8cm0y" />
     <bpmn:messageFlow id="Flow_0r9yj8f" name="Erinnerung Feedback zu Interessenten abgeben" sourceRef="Activity_0rtpuba" targetRef="Participant_1dnkt6c" />
     <bpmn:messageFlow id="Flow_0sq95ws" name="Erinnerung Adoptionsvertrag" sourceRef="Activity_17p0yc9" targetRef="Participant_1dnkt6c" />
+    <bpmn:messageFlow id="Flow_1kxtt8c" name="Absage" sourceRef="Activity_06fr7oa" targetRef="Participant_1o8cm0y" />
     <bpmn:textAnnotation id="TextAnnotation_1ig60mz">
       <bpmn:text>Es gibt auf der Website, wo auch die Inserate sind, die Möglichkeit bei Interesse ein Formular auszufüllen - hier können die Katzen angegeben werden, für die man Interesse hat - 1 FORMULAR JE KATZE MUSS AUSGEFÜLLT WERDEN</bpmn:text>
     </bpmn:textAnnotation>
@@ -38,17 +38,15 @@
       <bpmn:text>hier kann man sich Pflegestelle über TierID bei Interessent holen und darüber dann Pflegestelle</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1s1bela" associationDirection="None" sourceRef="Activity_1sbhvgb" targetRef="TextAnnotation_0hwoi4g" />
-    <bpmn:correlationKey id="CorrelationKey_0upa9jb" name="MainCorrelationKey" />
+    <bpmn:association id="Association_0lvymyl" associationDirection="None" sourceRef="Event_1opryyo" targetRef="TextAnnotation_1ig60mz" />
+    <bpmn:correlationKey id="CorrelationKey_054xxzf" name="MainCorrelationKey" />
   </bpmn:collaboration>
   <bpmn:process id="Process_interessentenfindungsprozess_cx2unnf" isExecutable="true">
-    <bpmn:sequenceFlow id="Flow_08gzln3" sourceRef="Event_1opryyo" targetRef="Activity_0w823fp" />
+    <bpmn:sequenceFlow id="Flow_08gzln3" sourceRef="Event_1opryyo" targetRef="Activity_065g1fv" />
     <bpmn:dataStoreReference id="DataStoreReference_0u31dme" name="Tier Inserat" />
-    <bpmn:sequenceFlow id="Flow_1441mlp" sourceRef="Activity_0w823fp" targetRef="Gateway_0bqcq3y" />
-    <bpmn:sequenceFlow id="Flow_1ei0nvz" name="nein" sourceRef="Gateway_0bqcq3y" targetRef="Event_003ot66">
-      <bpmn:conditionExpression>adoptiert == true</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_1ei0nvz" name="nein" sourceRef="Gateway_0bqcq3y" targetRef="Activity_06fr7oa">
+      <bpmn:conditionExpression>adoptiertAntwort=="true"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:dataObjectReference id="DataObjectReference_0dqtozs" name="Interessent" dataObjectRef="DataObject_0pev87c" />
-    <bpmn:dataObject id="DataObject_0pev87c" name="Interessent" />
     <bpmn:startEvent id="Event_1opryyo" name="Anfrage erhalten">
       <bpmn:outgoing>Flow_08gzln3</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0s69buv" messageRef="Tieranfrage">
@@ -60,16 +58,8 @@
     <bpmn:sequenceFlow id="Flow_1qj7a8t" name="ja" sourceRef="Gateway_0bqcq3y" targetRef="Activity_0iec2gm" />
     <bpmn:sequenceFlow id="Flow_000ebfs" sourceRef="Event_0zdgrlw" targetRef="Activity_1ix7u3c" />
     <bpmn:sequenceFlow id="Flow_1d0rr8r" sourceRef="Activity_1ix7u3c" targetRef="Event_0lf2kfy" />
-    <bpmn:endEvent id="Event_003ot66" name="Tier schon vergeben">
-      <bpmn:incoming>Flow_1ei0nvz</bpmn:incoming>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_1jqifol" messageRef="Tier-vergeben">
-        <bpmn:extensionElements>
-          <spiffworkflow:messagePayload>{}</spiffworkflow:messagePayload>
-        </bpmn:extensionElements>
-      </bpmn:messageEventDefinition>
-    </bpmn:endEvent>
     <bpmn:exclusiveGateway id="Gateway_0bqcq3y" name="Tier noch verfügbar?" default="Flow_1qj7a8t">
-      <bpmn:incoming>Flow_1441mlp</bpmn:incoming>
+      <bpmn:incoming>Flow_0mfddez</bpmn:incoming>
       <bpmn:outgoing>Flow_1ei0nvz</bpmn:outgoing>
       <bpmn:outgoing>Flow_1qj7a8t</bpmn:outgoing>
     </bpmn:exclusiveGateway>
@@ -88,47 +78,39 @@
       <bpmn:sequenceFlow id="Flow_0zv8qp6" sourceRef="Event_1xmaw3l" targetRef="Activity_0jq4ojl" />
       <bpmn:serviceTask id="Activity_0jq4ojl" name="Daten des Interessenten auf Eignung prüfen">
         <bpmn:extensionElements>
-          <spiffworkflow:serviceTaskOperator id="http/GetRequest" resultVariable="elibigleRes">
+          <spiffworkflow:serviceTaskOperator id="http/GetRequest" resultVariable="eignungRes">
             <spiffworkflow:parameters>
-              <spiffworkflow:parameter id="url" type="str" value="&#34;http://host.docker.internal:8080/interessenten/&#34;+str(interessent[&#34;id&#34;])+&#34;/check-eligibility&#34;" />
+              <spiffworkflow:parameter id="url" type="str" value="&#34;http://host.docker.internal:8080/interessenten/&#34;+str(interessent[&#34;id&#34;])+&#34;/check-eignung&#34;" />
               <spiffworkflow:parameter id="headers" type="any" />
               <spiffworkflow:parameter id="params" type="any" />
               <spiffworkflow:parameter id="basic_auth_username" type="str" />
               <spiffworkflow:parameter id="basic_auth_password" type="str" />
             </spiffworkflow:parameters>
           </spiffworkflow:serviceTaskOperator>
-          <spiffworkflow:postScript>eligible=eligibleRes.get("body")</spiffworkflow:postScript>
+          <spiffworkflow:postScript>geeignet=eignungRes.get("body")</spiffworkflow:postScript>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0zv8qp6</bpmn:incoming>
         <bpmn:outgoing>Flow_1u2jxi3</bpmn:outgoing>
-        <bpmn:property id="Property_173e33u" name="__targetRef_placeholder" />
-        <bpmn:dataInputAssociation id="DataInputAssociation_0477zgu">
-          <bpmn:sourceRef>DataObjectReference_0dqtozs</bpmn:sourceRef>
-          <bpmn:targetRef>Property_173e33u</bpmn:targetRef>
+        <bpmn:property id="Property_034m2tw" name="__targetRef_placeholder" />
+        <bpmn:dataInputAssociation id="DataInputAssociation_1jhuehv">
+          <bpmn:sourceRef>DataObjectReference_0ct5mma</bpmn:sourceRef>
+          <bpmn:targetRef>Property_034m2tw</bpmn:targetRef>
         </bpmn:dataInputAssociation>
       </bpmn:serviceTask>
-      <bpmn:exclusiveGateway id="Gateway_1xvgtuu" name="Ist der Interessent geeignet?">
+      <bpmn:exclusiveGateway id="Gateway_1xvgtuu" name="Ist der Interessent geeignet?" default="Flow_0c2mpfk">
         <bpmn:incoming>Flow_1u2jxi3</bpmn:incoming>
         <bpmn:outgoing>Flow_0vi2jhb</bpmn:outgoing>
         <bpmn:outgoing>Flow_0c2mpfk</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:sequenceFlow id="Flow_1u2jxi3" sourceRef="Activity_0jq4ojl" targetRef="Gateway_1xvgtuu" />
-      <bpmn:sequenceFlow id="Flow_0vi2jhb" name="nein" sourceRef="Gateway_1xvgtuu" targetRef="Gateway_0fzsa9s">
-        <bpmn:conditionExpression>eligible == "false"</bpmn:conditionExpression>
+      <bpmn:sequenceFlow id="Flow_0vi2jhb" name="nein" sourceRef="Gateway_1xvgtuu" targetRef="Event_0poeu8s">
+        <bpmn:conditionExpression>geeignet== "false"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:sequenceFlow id="Flow_0c2mpfk" name="ja" sourceRef="Gateway_1xvgtuu" targetRef="Activity_1sbhvgb">
-        <bpmn:conditionExpression>eligible == "true"</bpmn:conditionExpression>
-      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_0c2mpfk" name="ja" sourceRef="Gateway_1xvgtuu" targetRef="Event_1vz2r4i" />
       <bpmn:sequenceFlow id="Flow_1hyyjle" sourceRef="Activity_1sbhvgb" targetRef="Activity_12799yg" />
       <bpmn:sendTask id="Activity_1sbhvgb" name="Pflegestelle über Interessenten informieren" messageRef="pflegestelle-benachrichtigen">
         <bpmn:extensionElements />
-        <bpmn:incoming>Flow_0c2mpfk</bpmn:incoming>
         <bpmn:outgoing>Flow_1hyyjle</bpmn:outgoing>
-        <bpmn:property id="Property_01lkdnj" name="__targetRef_placeholder" />
-        <bpmn:dataInputAssociation id="DataInputAssociation_0rfup1s">
-          <bpmn:sourceRef>DataObjectReference_0dqtozs</bpmn:sourceRef>
-          <bpmn:targetRef>Property_01lkdnj</bpmn:targetRef>
-        </bpmn:dataInputAssociation>
       </bpmn:sendTask>
       <bpmn:sequenceFlow id="Flow_0a84ji5" sourceRef="Activity_12799yg" targetRef="Gateway_1bugq3w" />
       <bpmn:receiveTask id="Activity_12799yg" name="Auf Feedback zu Interessenten der Pflegestelle warten">
@@ -141,7 +123,6 @@
         <bpmn:outgoing>Flow_0qq8jug</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:exclusiveGateway id="Gateway_0fzsa9s">
-        <bpmn:incoming>Flow_0vi2jhb</bpmn:incoming>
         <bpmn:incoming>Flow_0f55fv3</bpmn:incoming>
         <bpmn:incoming>Flow_01kr9oc</bpmn:incoming>
         <bpmn:incoming>Flow_1ak2dyg</bpmn:incoming>
@@ -152,21 +133,11 @@
         <bpmn:extensionElements />
         <bpmn:incoming>Flow_0cq62e8</bpmn:incoming>
         <bpmn:outgoing>Flow_1hjmyt2</bpmn:outgoing>
-        <bpmn:property id="Property_17k8tnt" name="__targetRef_placeholder" />
-        <bpmn:dataInputAssociation id="DataInputAssociation_05kilko">
-          <bpmn:sourceRef>DataObjectReference_0dqtozs</bpmn:sourceRef>
-          <bpmn:targetRef>Property_17k8tnt</bpmn:targetRef>
-        </bpmn:dataInputAssociation>
       </bpmn:sendTask>
       <bpmn:sendTask id="Activity_0hwsj90" name="Info über erfolgreiche Adoption weitergeben" messageRef="pflegestelle-benachrichtigen">
         <bpmn:extensionElements />
         <bpmn:incoming>Flow_172uovp</bpmn:incoming>
         <bpmn:outgoing>Flow_1gc3jze</bpmn:outgoing>
-        <bpmn:property id="Property_1axsjb6" name="__targetRef_placeholder" />
-        <bpmn:dataInputAssociation id="DataInputAssociation_0uyzndv">
-          <bpmn:sourceRef>DataObjectReference_0dqtozs</bpmn:sourceRef>
-          <bpmn:targetRef>Property_1axsjb6</bpmn:targetRef>
-        </bpmn:dataInputAssociation>
       </bpmn:sendTask>
       <bpmn:sequenceFlow id="Flow_0qq8jug" name="ja" sourceRef="Gateway_1bugq3w" targetRef="Activity_1q7i0ak" />
       <bpmn:sequenceFlow id="Flow_0cq62e8" sourceRef="Gateway_0fzsa9s" targetRef="Activity_1v77s0n" />
@@ -188,11 +159,6 @@
         <bpmn:extensionElements />
         <bpmn:incoming>Flow_1dh9cuv</bpmn:incoming>
         <bpmn:outgoing>Flow_0pbvtwt</bpmn:outgoing>
-        <bpmn:property id="Property_00oqkcf" name="__targetRef_placeholder" />
-        <bpmn:dataInputAssociation id="DataInputAssociation_0h2tcx2">
-          <bpmn:sourceRef>DataObjectReference_0dqtozs</bpmn:sourceRef>
-          <bpmn:targetRef>Property_00oqkcf</bpmn:targetRef>
-        </bpmn:dataInputAssociation>
       </bpmn:sendTask>
       <bpmn:endEvent id="Event_028ff26">
         <bpmn:incoming>Flow_0pbvtwt</bpmn:incoming>
@@ -209,11 +175,6 @@
         <bpmn:extensionElements />
         <bpmn:incoming>Flow_0cydjyl</bpmn:incoming>
         <bpmn:outgoing>Flow_1b8l501</bpmn:outgoing>
-        <bpmn:property id="Property_1mn6aw1" name="__targetRef_placeholder" />
-        <bpmn:dataInputAssociation id="DataInputAssociation_1qirmbl">
-          <bpmn:sourceRef>DataObjectReference_0dqtozs</bpmn:sourceRef>
-          <bpmn:targetRef>Property_1mn6aw1</bpmn:targetRef>
-        </bpmn:dataInputAssociation>
       </bpmn:sendTask>
       <bpmn:boundaryEvent id="Event_1xe9vrb" name="Alle 72 Stunden" cancelActivity="false" attachedToRef="Activity_12799yg">
         <bpmn:outgoing>Flow_0cydjyl</bpmn:outgoing>
@@ -239,28 +200,83 @@
         <bpmn:incoming>Flow_1b8l501</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_1b8l501" sourceRef="Activity_0rtpuba" targetRef="Event_1yee1p6" />
+      <bpmn:endEvent id="Event_1vz2r4i">
+        <bpmn:incoming>Flow_0c2mpfk</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:endEvent id="Event_0poeu8s">
+        <bpmn:incoming>Flow_0vi2jhb</bpmn:incoming>
+      </bpmn:endEvent>
     </bpmn:subProcess>
     <bpmn:boundaryEvent id="Event_0zdgrlw" attachedToRef="Activity_0iec2gm">
       <bpmn:outgoing>Flow_000ebfs</bpmn:outgoing>
       <bpmn:signalEventDefinition id="SignalEventDefinition_180jsno" />
     </bpmn:boundaryEvent>
-    <bpmn:serviceTask id="Activity_0w823fp" name="Adoptionsstatus des gewünschten Tiers überprüfen">
+    <bpmn:sequenceFlow id="Flow_1hhng6o" sourceRef="Activity_065g1fv" targetRef="Activity_0w823fp" />
+    <bpmn:sequenceFlow id="Flow_0mfddez" sourceRef="Activity_0w823fp" targetRef="Gateway_0bqcq3y" />
+    <bpmn:serviceTask id="Activity_065g1fv" name="Interessent aufnehmen">
       <bpmn:extensionElements>
-        <spiffworkflow:postScript>adoptiert=adopted.get("body")</spiffworkflow:postScript>
-        <spiffworkflow:serviceTaskOperator id="http/GetRequest" resultVariable="adopted">
+        <spiffworkflow:serviceTaskOperator id="http/PostRequestV2" resultVariable="interessentResponse">
           <spiffworkflow:parameters>
-            <spiffworkflow:parameter id="url" type="str" value="&#34;http://host.docker.internal:8080/tiere/&#34;+str(anfrage[&#34;interessiertAnTierID&#34;])+&#34;/istAdoptiert&#34;" />
+            <spiffworkflow:parameter id="url" type="str" value="&#34;http://host.docker.internal:8080/interessenten&#34;" />
             <spiffworkflow:parameter id="headers" type="any" value="{&#34;Content-Type&#34;:&#34;application/json&#34;}" />
-            <spiffworkflow:parameter id="params" type="any" />
+            <spiffworkflow:parameter id="data" type="any" value="anfrage" />
             <spiffworkflow:parameter id="basic_auth_username" type="str" />
             <spiffworkflow:parameter id="basic_auth_password" type="str" />
           </spiffworkflow:parameters>
         </spiffworkflow:serviceTaskOperator>
+        <spiffworkflow:postScript>interessent = interessentResponse.get("body")</spiffworkflow:postScript>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_08gzln3</bpmn:incoming>
-      <bpmn:outgoing>Flow_1441mlp</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1hhng6o</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_1gt3uj1">
+        <bpmn:targetRef>DataObjectReference_0ct5mma</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:serviceTask>
-    <bpmn:association id="Association_0lvymyl" associationDirection="None" sourceRef="Event_1opryyo" targetRef="TextAnnotation_1ig60mz" />
+    <bpmn:dataObject id="interessent" name="interessent" />
+    <bpmn:dataObjectReference id="DataObjectReference_0ct5mma" name="interessent" dataObjectRef="interessent" />
+    <bpmn:serviceTask id="Activity_0w823fp" name="Adoptionsstatus des gewünschten Tiers überprüfen">
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator id="http/GetRequestV2" resultVariable="adopted">
+          <spiffworkflow:parameters>
+            <spiffworkflow:parameter id="url" type="str" value="&#34;http://host.docker.internal:8080/tiere/&#34;+str(interessent[&#34;interessiertAnTierID&#34;])+&#34;/istAdoptiert&#34;" />
+            <spiffworkflow:parameter id="headers" type="any" value="{&#34;Content-Type&#34;:&#34;application/json&#34;}" />
+            <spiffworkflow:parameter id="params" type="any" />
+            <spiffworkflow:parameter id="basic_auth_username" type="str" />
+            <spiffworkflow:parameter id="basic_auth_password" type="str" />
+            <spiffworkflow:parameter id="attempts" type="int" />
+          </spiffworkflow:parameters>
+        </spiffworkflow:serviceTaskOperator>
+        <spiffworkflow:postScript>import json
+adoptiert=adopted.get("body")
+adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1hhng6o</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mfddez</bpmn:outgoing>
+      <bpmn:property id="Property_1g5kujb" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_0mlgwc8">
+        <bpmn:sourceRef>DataObjectReference_0ct5mma</bpmn:sourceRef>
+        <bpmn:targetRef>Property_1g5kujb</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1nzuw4y" sourceRef="Activity_06fr7oa" targetRef="Event_003ot66" />
+    <bpmn:sendTask id="Activity_06fr7oa" name="Nachricht dass Tier bereits adoptiert wurde senden" messageRef="interessent-benachrichtigen">
+      <bpmn:extensionElements>
+        <spiffworkflow:messagePayload>{
+   "interessent": interessent,
+   "messageType": "AbsageAdoptionsanfrage"
+}</spiffworkflow:messagePayload>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ei0nvz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1nzuw4y</bpmn:outgoing>
+      <bpmn:property id="Property_1aeyxq6" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_0a2vqax">
+        <bpmn:sourceRef>DataObjectReference_0ct5mma</bpmn:sourceRef>
+        <bpmn:targetRef>Property_1aeyxq6</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="Event_003ot66" name="Tier schon vergeben">
+      <bpmn:incoming>Flow_1nzuw4y</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmn:process id="Process_14rygne">
     <bpmn:dataObjectReference id="DataObjectReference_1h6wipw" name="Inseratdaten" dataObjectRef="DataObject_1lj3rss" />
@@ -384,7 +400,6 @@
     </bpmn:serviceTask>
     <bpmn:association id="Association_0d4xamj" associationDirection="None" sourceRef="Activity_0pflo04" targetRef="TextAnnotation_1w6y2kv" />
   </bpmn:process>
-  <bpmn:message id="Tier-vergeben" name="Tier-vergeben" />
   <bpmn:message id="TierAdoptierbereit" name="TierAdoptierbereit" />
   <bpmn:message id="pflegestelle-benachrichtigen" name="pflegestelle-benachrichtigen" />
   <bpmn:message id="interessent-benachrichtigen" name="interessent-benachrichtigen" />
@@ -395,22 +410,10 @@
         <dc:Bounds x="-190" y="-120" width="2690" height="744" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DataObjectReference_0dqtozs_di" bpmnElement="DataObjectReference_0dqtozs">
-        <dc:Bounds x="262" y="5" width="36" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="252" y="-8" width="56" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_011m3ku_di" bpmnElement="Event_1opryyo">
         <dc:Bounds x="-108" y="256" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="-129" y="299" width="82" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1h7no2s_di" bpmnElement="Event_003ot66">
-        <dc:Bounds x="712" y="-88" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="706" y="-45" width="51" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0bqcq3y_di" bpmnElement="Gateway_0bqcq3y" isMarkerVisible="true">
@@ -439,7 +442,7 @@
       <bpmndi:BPMNShape id="Gateway_1xvgtuu_di" bpmnElement="Gateway_1xvgtuu" isMarkerVisible="true">
         <dc:Bounds x="995" y="249" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1057" y="250" width="55" height="40" />
+          <dc:Bounds x="1057" y="250" width="56" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_04t0wo5_di" bpmnElement="Activity_1sbhvgb">
@@ -495,6 +498,12 @@
       <bpmndi:BPMNShape id="Event_1yee1p6_di" bpmnElement="Event_1yee1p6">
         <dc:Bounds x="1502" y="472" width="36" height="36" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1vz2r4i_di" bpmnElement="Event_1vz2r4i">
+        <dc:Bounds x="1002" y="402" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0poeu8s_di" bpmnElement="Event_0poeu8s">
+        <dc:Bounds x="1242" y="146" width="36" height="36" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1mv3xfg_di" bpmnElement="Event_0csu0ka">
         <dc:Bounds x="1592" y="306" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -530,17 +539,18 @@
       <bpmndi:BPMNEdge id="Flow_0vi2jhb_di" bpmnElement="Flow_0vi2jhb">
         <di:waypoint x="1020" y="249" />
         <di:waypoint x="1020" y="164" />
-        <di:waypoint x="1405" y="164" />
+        <di:waypoint x="1242" y="164" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1024" y="208" width="22" height="14" />
+          <dc:Bounds x="1025" y="208" width="21" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0c2mpfk_di" bpmnElement="Flow_0c2mpfk">
         <di:waypoint x="1020" y="299" />
-        <di:waypoint x="1020" y="364" />
-        <di:waypoint x="1070" y="364" />
+        <di:waypoint x="1020" y="351" />
+        <di:waypoint x="1010" y="351" />
+        <di:waypoint x="1010" y="405" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="996" y="327" width="8" height="14" />
+          <dc:Bounds x="986" y="373" width="8" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1hyyjle_di" bpmnElement="Flow_1hyyjle">
@@ -608,34 +618,50 @@
         <di:waypoint x="1450" y="490" />
         <di:waypoint x="1502" y="490" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Activity_1rupdc7_di" bpmnElement="Activity_0w823fp">
-        <dc:Bounds x="190" y="234" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_192vem1_di" bpmnElement="Activity_065g1fv">
+        <dc:Bounds x="30" y="234" width="100" height="80" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_0ct5mma_di" bpmnElement="DataObjectReference_0ct5mma">
+        <dc:Bounds x="212" y="45" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="203" y="102" width="55" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1rupdc7_di" bpmnElement="Activity_0w823fp">
+        <dc:Bounds x="290" y="234" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0278cls_di" bpmnElement="Activity_06fr7oa">
+        <dc:Bounds x="640" y="-100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0hmszky_di" bpmnElement="Event_003ot66">
+        <dc:Bounds x="862" y="-78" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="857" y="-35" width="50" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1syeu83_di" bpmnElement="Event_0zdgrlw">
         <dc:Bounds x="1972" y="32" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_08gzln3_di" bpmnElement="Flow_08gzln3">
         <di:waypoint x="-72" y="274" />
-        <di:waypoint x="190" y="274" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1441mlp_di" bpmnElement="Flow_1441mlp">
-        <di:waypoint x="290" y="274" />
-        <di:waypoint x="565" y="274" />
+        <di:waypoint x="30" y="274" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1ei0nvz_di" bpmnElement="Flow_1ei0nvz">
         <di:waypoint x="590" y="249" />
-        <di:waypoint x="590" y="-70" />
-        <di:waypoint x="712" y="-70" />
+        <di:waypoint x="590" y="-60" />
+        <di:waypoint x="640" y="-60" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="594" y="102" width="22" height="14" />
+          <dc:Bounds x="549" y="183" width="21" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1qj7a8t_di" bpmnElement="Flow_1qj7a8t">
         <di:waypoint x="615" y="274" />
         <di:waypoint x="730" y="274" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="669" y="256" width="9" height="14" />
+          <dc:Bounds x="692" y="256" width="8" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_000ebfs_di" bpmnElement="Flow_000ebfs">
@@ -646,10 +672,17 @@
         <di:waypoint x="2190" y="50" />
         <di:waypoint x="2272" y="50" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_0lvymyl_di" bpmnElement="Association_0lvymyl">
-        <di:waypoint x="-103" y="262" />
-        <di:waypoint x="-380" y="0" />
-        <di:waypoint x="-400" y="-10" />
+      <bpmndi:BPMNEdge id="Flow_1hhng6o_di" bpmnElement="Flow_1hhng6o">
+        <di:waypoint x="130" y="274" />
+        <di:waypoint x="290" y="274" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mfddez_di" bpmnElement="Flow_0mfddez">
+        <di:waypoint x="390" y="274" />
+        <di:waypoint x="565" y="274" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nzuw4y_di" bpmnElement="Flow_1nzuw4y">
+        <di:waypoint x="740" y="-60" />
+        <di:waypoint x="862" y="-60" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="DataStoreReference_0u31dme_di" bpmnElement="DataStoreReference_0u31dme">
         <dc:Bounds x="265" y="675" width="50" height="50" />
@@ -836,7 +869,7 @@
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_1ig60mz_di" bpmnElement="TextAnnotation_1ig60mz">
-        <dc:Bounds x="-500" y="-50" width="100" height="320" />
+        <dc:Bounds x="-580" y="30" width="100" height="320" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_0ajwr7l_di" bpmnElement="TextAnnotation_0ajwr7l">
@@ -855,34 +888,21 @@
         <dc:Bounds x="1140" y="-100" width="99.99274985992396" height="126.58891666780089" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="DataInputAssociation_0477zgu_di" bpmnElement="DataInputAssociation_0477zgu">
-        <di:waypoint x="298" y="36" />
-        <di:waypoint x="857" y="235" />
+      <bpmndi:BPMNEdge id="DataInputAssociation_1jhuehv_di" bpmnElement="DataInputAssociation_1jhuehv">
+        <di:waypoint x="248" y="75" />
+        <di:waypoint x="850" y="247" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataInputAssociation_0rfup1s_di" bpmnElement="DataInputAssociation_0rfup1s">
-        <di:waypoint x="298" y="54" />
-        <di:waypoint x="530" y="364" />
-        <di:waypoint x="1070" y="364" />
+      <bpmndi:BPMNEdge id="DataOutputAssociation_1gt3uj1_di" bpmnElement="DataOutputAssociation_1gt3uj1">
+        <di:waypoint x="110" y="234" />
+        <di:waypoint x="216" y="95" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataInputAssociation_05kilko_di" bpmnElement="DataInputAssociation_05kilko">
-        <di:waypoint x="298" y="31" />
-        <di:waypoint x="1610" y="138" />
+      <bpmndi:BPMNEdge id="DataInputAssociation_0mlgwc8_di" bpmnElement="DataInputAssociation_0mlgwc8">
+        <di:waypoint x="240" y="95" />
+        <di:waypoint x="296" y="235" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataInputAssociation_0uyzndv_di" bpmnElement="DataInputAssociation_0uyzndv">
-        <di:waypoint x="298" y="33" />
-        <di:waypoint x="1650" y="250" />
-        <di:waypoint x="1723" y="327" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataInputAssociation_0h2tcx2_di" bpmnElement="DataInputAssociation_0h2tcx2">
-        <di:waypoint x="289" y="55" />
-        <di:waypoint x="480" y="580" />
-        <di:waypoint x="1610" y="580" />
-        <di:waypoint x="1633" y="527" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataInputAssociation_1qirmbl_di" bpmnElement="DataInputAssociation_1qirmbl">
-        <di:waypoint x="292" y="55" />
-        <di:waypoint x="500" y="490" />
-        <di:waypoint x="1350" y="490" />
+      <bpmndi:BPMNEdge id="DataInputAssociation_0a2vqax_di" bpmnElement="DataInputAssociation_0a2vqax">
+        <di:waypoint x="248" y="65" />
+        <di:waypoint x="640" y="-52" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataOutputAssociation_0rmzksy_di" bpmnElement="DataOutputAssociation_0rmzksy">
         <di:waypoint x="-105" y="1203" />
@@ -916,18 +936,16 @@
         <di:waypoint x="1126" y="324" />
         <di:waypoint x="1173" y="27" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0lvymyl_di" bpmnElement="Association_0lvymyl">
+        <di:waypoint x="-103" y="262" />
+        <di:waypoint x="-380" y="0" />
+        <di:waypoint x="-480" y="30" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1j4nr5f_di" bpmnElement="Flow_1j4nr5f">
         <di:waypoint x="-90" y="-160" />
         <di:waypoint x="-90" y="256" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="-139" y="45" width="38" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0z7slyj_di" bpmnElement="Flow_0z7slyj">
-        <di:waypoint x="730" y="-88" />
-        <di:waypoint x="730" y="-160" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="751" y="-137" width="37" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1rurmzb_di" bpmnElement="Flow_1rurmzb">
@@ -996,6 +1014,13 @@
         <di:waypoint x="1680" y="750" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1688" y="706" width="83" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kxtt8c_di" bpmnElement="Flow_1kxtt8c">
+        <di:waypoint x="690" y="-100" />
+        <di:waypoint x="690" y="-160" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="687" y="-133" width="37" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
