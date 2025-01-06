@@ -20,15 +20,49 @@ public class Route extends RouteBuilder {
             case "AnfrageTieraufnahme":
                 mail.setSubject("Anfrage Tieraufnahme");
 
-                msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", ";
-                msg += "";
+                msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", \n " +
+                        "Unser Tierschutzverein hat eine Anfrage zur Aufnahme eines Tieres erhalten. \n" +
+                        "Tierart: " + mailRequestDto.getTier().getTierart() + "\n" +
+                        "Name: " + mailRequestDto.getTier().getName() + "\n" +
+                        "Geburtstag: " + mailRequestDto.getTier().getGeburtsdatum() + "\n" +
+                        "Tierbesitzer-Kontakt: " + mailRequestDto.getTier().getTierBesitzerEmail() + "\n" +
+                        "Bitte geben Sie uns baldmöglichst Bescheid, ob Sie das Tier aufnehmen können. \n" +
+                        "Mit freundlichen Grüßen \n" +
+                        "Ihr Tierschutzverein Musterstadt";
+                break;
+            case "ErinnerungAnfrageTieraufnahme":
+                mail.setSubject("Erinnerung: Anfrage Tieraufnahme");
+
+                msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", \n " +
+                        "Unser Tierschutzverein hat eine Anfrage zur Aufnahme eines Tieres erhalten. \n" +
+                        "Tierart: " + mailRequestDto.getTier().getTierart() + "\n" +
+                        "Name: " + mailRequestDto.getTier().getName() + "\n" +
+                        "Geburtstag: " + mailRequestDto.getTier().getGeburtsdatum() + "\n" +
+                        "Tierbesitzer-Kontakt: " + mailRequestDto.getTier().getTierBesitzerEmail() + "\n" +
+                        "Bitte geben Sie uns baldmöglichst Bescheid, ob Sie das Tier aufnehmen können. \n" +
+                        "Mit freundlichen Grüßen \n" +
+                        "Ihr Tierschutzverein Musterstadt";
+                break;
+            case "NachfrageBereitschaftAufnahme":
+                mail.setSubject("Nachfrage zur Bereitschaft zur Tieraufnahme aufgrund von nicht-Rückmeldung");
+
+                msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", \n " +
+                        "Unser Tierschutzverein hat eine Anfrage zur Aufnahme eines Tieres erhalten. \n" +
+                        "Sie haben sich jedoch nicht zurückgemeldet. Aus diesem Grund hat unser System Sie vorübergehend als nicht aufnahmebereit abgespeichert. \n" +
+                        "Bitte geben Sie uns baldmöglichst Bescheid, ob dies der Fall ist, oder ob Sie weiterhin bereit sind Tiere aufzunehmen. \n" +
+                        "Mit freundlichen Grüßen \n" +
+                        "Ihr Tierschutzverein Musterstadt";
                 break;
             case "TierbesitzerInformieren":
-                mail.setSubject("");
+                mail.setSubject("Ablehnung der Tieraufnahme");
 
                 msg = "Guten Tag, ";
 
-                msg += "";
+                msg += "leider müssen wir Ihnen mitteilen, dass wir Ihr Tier nicht aufnehmen können, da wir aktuell keine freien Kapazitäten haben. \n" +
+                        "Bitte wenden Sie sich an eines unserer Nachbartierheime: TSV Beispielhausen e.V. oder Tierheim Wunschkirchen e.V.. \n" +
+                        "Wir bitten um Ihr Verständnis. \n" +
+                        "Mit freundlichen Grüßen \n" +
+                        "Ihr Tierschutzverein Musterstadt";
                 mail.setBody(msg);
                 break;
             case "AntwortInteressent":
