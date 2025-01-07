@@ -29,7 +29,6 @@ public class InseratResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public Response addInserat(Inserat inserat) {
-        // Überprüfen, ob die TierID existiert
         Tier tier = tierRepository.findById(inserat.getTierId());
 
         // Tier existiert nicht
@@ -39,11 +38,8 @@ public class InseratResource {
                     .build();
         }
 
-        // Überprüfen, ob es bereits ein Inserat für diese TierID gibt
-        boolean inseratExists = inseratRepository.find("tierId", inserat.getTierId()).firstResult() != null;
-
         // Inserat existiert bereits
-        if (inseratExists) {
+        if (inseratRepository.find("tierId", inserat.getTierId()).firstResult() != null) {
             return Response.status(Response.Status.CONFLICT)
                     .entity("Ein Inserat für das Tier mit ID " + inserat.getTierId() + " existiert bereits.")
                     .build();
