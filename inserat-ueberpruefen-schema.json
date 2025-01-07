@@ -1,0 +1,28 @@
+{
+  "title": "Text Field",
+  "description": "A simple text field that is required, has a default value, sets a placeholder, includes a description. (field name will be 'firstname')",
+  "type": "object",
+  "required": [
+    "bild",
+    "inseratText",
+    "istAktiv"
+  ],
+  "properties": {
+    "tierId": {
+      "type": "integer",
+      "title": "Tier Id"
+    },
+    "bild": {
+      "type": "string",
+      "title": "Bild"
+    },
+    "inseratText": {
+      "type": "string",
+      "title": "Bio"
+    },
+    "istAktiv": {
+      "type": "boolean",
+      "title": "Ist aktiv?"
+    }
+  }
+}
