@@ -7,6 +7,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.component.jacksonxml.JacksonXMLDataFormat;
 
 @ApplicationScoped
 public class Route extends RouteBuilder {
@@ -135,6 +136,8 @@ public class Route extends RouteBuilder {
                 .marshal().jacksonXml(MailDto.class)
                 .to("file:messages/pflegestelle?noop=true");
 
+        from("file:messages/pflegestelle").unmarshal().jacksonXml(MailDto.class).marshal().json().to("activemq:queue:backend");
+
         // Nachrichten an dem Interessenten
         from("activemq:queue:interessent-benachrichtigen")
                 .unmarshal(jsonFormat)
@@ -152,6 +155,8 @@ public class Route extends RouteBuilder {
                 .marshal().jacksonXml(MailDto.class)
                 .to("file:messages/interessent?noop=true");
 
+        from("file:messages/interessent").unmarshal().jacksonXml(MailDto.class).marshal().json().to("activemq:queue:backend");
+
         // Nachrichten an dem Tierbesitzer
         from("activemq:queue:tierbesitzer-benachrichtigen")
                 .unmarshal(jsonFormat)
@@ -168,5 +173,8 @@ public class Route extends RouteBuilder {
                 })
                 .marshal().jacksonXml(MailDto.class)
                 .to("file:messages/tierbesitzer?noop=true");
+
+        from("file:messages/tierbesitzer").unmarshal().jacksonXml(MailDto.class).marshal().json().to("activemq:queue:backend");
+
     }
 }
