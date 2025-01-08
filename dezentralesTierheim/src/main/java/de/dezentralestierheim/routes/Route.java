@@ -18,6 +18,7 @@ public class Route extends RouteBuilder {
         mail.setFrom("tierheim@gmail.com");
 
         switch (mailRequestDto.getMessageType()) {
+            // Aufnahmeprozess: Pflegestelle über Tieraufnahme benachrichtigen
             case "AnfrageTieraufnahme":
                 mail.setSubject("Anfrage Tieraufnahme");
 
@@ -31,6 +32,7 @@ public class Route extends RouteBuilder {
                         "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
+            // Aufnahmeprozess: Erinnerung an Pflegestelle senden
             case "ErinnerungAnfrageTieraufnahme":
                 mail.setSubject("Erinnerung: Anfrage Tieraufnahme");
 
@@ -45,31 +47,72 @@ public class Route extends RouteBuilder {
                         "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
+            // Aufnahmeprozess: Bei Pflegestelle Aufnahmebreitschaft für Zukunft abfragen
             case "NachfrageBereitschaftAufnahme":
-                mail.setSubject("Nachfrage zur Bereitschaft zur Tieraufnahme aufgrund von nicht-Rückmeldung");
+                mail.setSubject("Nachfrage der Bereitschaft zur Tieraufnahme aufgrund von nicht-Rückmeldung");
 
                 msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", \n \n" +
                         "unser Tierschutzverein hat eine Anfrage zur Aufnahme eines Tieres erhalten. \n" +
-                        "Sie wurden von unserem System aufgrund Ihrer Angaben als potentielle Pflegestelle ermittelt \n" +
+                        "Sie wurden von unserem System aufgrund Ihrer Angaben als potentielle Pflegestelle ermittelt. \n" +
                         "Jedoch haben Sie sich nicht zurückgemeldet. Aus diesem Grund hat unser System Sie vorübergehend als nicht aufnahmebereit abgespeichert. \n" +
                         "Bitte geben Sie uns baldmöglichst Bescheid, ob dies der Fall ist, oder ob Sie weiterhin bereit sind Tiere aufzunehmen. \n" +
                         "Wir bedanken uns für Ihr Engagement. \n \n" +
                         "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
+            // Adoptionsprozess: Pflegestelle über Interessenten informieren
             case "PflegestelleInteressentInformieren":
 
-                mail.setSubject("Anfrage zur Tieraufnahme");
+                mail.setSubject("Interessent gefunden");
 
-                msg = "Guten Tag Pflegestelle " + mailRequestDto.getInteressent() + ", \n \n" +
-                        "unser Tierschutzverein hat eine Anfrage zur Aufnahme eines Tieres erhalten. \n" +
+                msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", \n \n" +
+                        "unser Tierschutzverein hat eine Anfrage zur Aufnahme Ihres Tieres erhalten. \n" +
+                        "Der Interessent " + mailRequestDto.getInteressent().getName() + "hat eine Adoptionsanfrage für das folgende Tier gestellt. \n" +
                         "Tierart: " + mailRequestDto.getTier().getTierart() + "\n" +
                         "Name: " + mailRequestDto.getTier().getName() + "\n" +
                         "Geburtstag: " + mailRequestDto.getTier().getGeburtsdatum() + "\n" +
-                        "Bitte geben Sie uns baldmöglichst Bescheid, ob Sie das Tier aufnehmen können. \n \n" +
+                        "Sie können den Interessenten unter folgender E-Mail erreichen " + mailRequestDto.getInteressent().getEmail() + "\n" +
+                        "Bitte geben Sie uns baldmöglichst Bescheid, ob das Tier für die Adoption bereit ist. \n \n" +
                         "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
+            // Adoptionsprozess: Erinnerung senden (1)
+            case "FeedbackErinnerung":
+
+                mail.setSubject("Erinnerung: Feedback zu Interessenten benötigt");
+
+                msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", \n \n" +
+                        "wie Ihnen bereits mitgeteilt wurde, hat unser Tierschutzverein eine Anfrage zur Aufnahme eines Ihrer Tieres erhalten. \n" +
+                        "Um den Abwicklung des Adoptionsprozesses durchführen zu können benötigen wir Ihr Feedback bezüglich des Interessenten. \n" +
+                        "Aus diesem Grund würden wir uns erkenntlich zeigen, wenn Sie uns dieses baldmöglichst mitteilen. \n" +
+                        "Anschließend werden der Interessent und das Tier wiedergegeben. \n" +
+                        "Interessent: " + mailRequestDto.getInteressent().getName() + " \n" +
+                        "Kontakt: " + mailRequestDto.getInteressent().getEmail() + " \n" +
+                        "Tierart: " + mailRequestDto.getTier().getTierart() + "\n" +
+                        "Name: " + mailRequestDto.getTier().getName() + "\n" +
+                        "Geburtstag: " + mailRequestDto.getTier().getGeburtsdatum() + "\n" +
+                        "Mit freundlichen Grüßen \n \n" +
+                        "Ihr Tierschutzverein Musterstadt";
+                break;
+            // Adoptionsprozess: Erinnerung senden (2)
+            case "AdoptionsvertragErinnerung":
+
+                mail.setSubject("Erinnerung: Adoptionsvertrag benötigt");
+
+                msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", \n \n" +
+                        "wie Ihnen bereits mitgeteilt wurde, hat unser Tierschutzverein eine Anfrage zur Aufnahme eines Ihrer Tiere erhalten. \n" +
+                        "Um die Abwicklung des Adoptionsprozesses durchführen zu können benötigen wir den von Ihnen ausgefüllten Adoptionsvertrag. \n" +
+                        "Aus diesem Grund würden wir uns erkenntlich zeigen, wenn Sie uns dieses baldmöglichst senden. \n" +
+                        "Anschließend werden der Interessent und das Tier wiedergegeben. \n" +
+                        "Interessent: " + mailRequestDto.getInteressent().getName() + " \n" +
+                        "Kontakt: " + mailRequestDto.getInteressent().getEmail() + " \n" +
+                        "Tierart: " + mailRequestDto.getTier().getTierart() + "\n" +
+                        "Name: " + mailRequestDto.getTier().getName() + "\n" +
+                        "Geburtstag: " + mailRequestDto.getTier().getGeburtsdatum() + "\n" +
+                        "Mit freundlichen Grüßen \n \n" +
+                        "Ihr Tierschutzverein Musterstadt";
+                break;
+            // Aufnahmeprozess: Tierbesitzer informieren
             case "TierbesitzerInformieren":
                 mail.setSubject("Ablehnung der Tieraufnahme");
 
@@ -81,6 +124,7 @@ public class Route extends RouteBuilder {
                         "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
+            // Aufnahmeprozess: Pflegestelle über Rückzieher informieren
             case "Rueckzieher":
                 mail.setSubject("Tieraufnahme abgebrochen");
 
@@ -92,15 +136,29 @@ public class Route extends RouteBuilder {
                         "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
+            // Adoptionsprozess: Nachricht, dass Tier bereits adoptiert wurde, senden
+            // Adoptionsprozess: Tier nicht mehr verfügbar Nachricht senden
             case "AbsageAdoptionsanfrage":
-                mail.setSubject("");
+                mail.setSubject("Absage der Adoptionsanfrage");
 
                 msg = "Guten Tag " + mailRequestDto.getInteressent().getName() + ", \n \n" +
                         "leider müssen wir Ihnen mitteilen, dass das Tier " + mailRequestDto.getInteressent().getInteressiertAnTierID() + " bereits adoptiert wurde. \n" +
                         "Schauen Sie sich gerne unsere offenen Inserate an und teilen Sie uns mit, ob Sie ein Tier finden, um das Sie sich kümmern möchten. \n" +
                         "Falls kein Tier zu Ihren Anforderungen passt, können Sie zu einem späteren Zeitpunkt erneut unsere Inserate überprüfen. \n" +
-                        "Sie können ebenfalls unseren Newsletter abonnieren, um über neue Tieraufnahmen, informiert zu werden. \n" +
                         "Wir bitten um Ihr Verständnis. \n \n" +
+                        "Mit freundlichen Grüßen \n" +
+                        "Ihr Tierschutzverein Musterstadt";
+                break;
+            // Adoptionsprozess: Absage zu Adoptionsanfrage senden
+            case "AbsageInteressentAdoption":
+                mail.setSubject("Absage der Adoptionsanfrage");
+
+                msg = "Guten Tag " + mailRequestDto.getInteressent().getName() + ", \n \n" +
+                        "leider müssen wir Ihnen mitteilen, dass wir Ihre Adoptionsanfrage nicht bestätigen können. \n" +
+                        "Dies kann unter anderem an der Verkehrslage oder anderen Tieren in einem Haushalt liegen. \n" +
+                        "Falls Sie mehr erfahren möchten, setzen Sie sich gerne mit uns in Verbindung. \n" +
+                        "Wir bitten um Ihr Verständnis. \n \n" +
+                        "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
             default:
