@@ -56,6 +56,9 @@
 inseratText = inseratdaten["inseratText"]
 istAktiv = inseratdaten["istAktiv"]
 tierId = inseratdaten["tierId"]</spiffworkflow:preScript>
+        <spiffworkflow:postScript>inseratdaten["inseratText"] = inseratText
+inseratdaten["bild"] = bild
+</spiffworkflow:postScript>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0mndmtm</bpmn:incoming>
       <bpmn:outgoing>Flow_0pgjjs4</bpmn:outgoing>
@@ -64,6 +67,9 @@ tierId = inseratdaten["tierId"]</spiffworkflow:preScript>
         <bpmn:sourceRef>DataObjectReference_0tmohg1</bpmn:sourceRef>
         <bpmn:targetRef>Property_0xfbb9q</bpmn:targetRef>
       </bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_0n04jqy">
+        <bpmn:targetRef>DataObjectReference_0tmohg1</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:userTask>
     <bpmn:dataObjectReference id="DataObjectReference_0tmohg1" name="inseratdaten" dataObjectRef="inseratdaten" />
     <bpmn:dataObject id="inseratdaten" name="inseratdaten" />
@@ -83,10 +89,10 @@ tierId = inseratdaten["tierId"]</spiffworkflow:preScript>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0pgjjs4</bpmn:incoming>
       <bpmn:outgoing>Flow_1gbjz1g</bpmn:outgoing>
-      <bpmn:property id="Property_1nv4z6o" name="__targetRef_placeholder" />
-      <bpmn:dataInputAssociation id="DataInputAssociation_0kunrpb">
+      <bpmn:property id="Property_1175c0z" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_0s5q4kc">
         <bpmn:sourceRef>DataObjectReference_0tmohg1</bpmn:sourceRef>
-        <bpmn:targetRef>Property_1nv4z6o</bpmn:targetRef>
+        <bpmn:targetRef>Property_1175c0z</bpmn:targetRef>
       </bpmn:dataInputAssociation>
       <bpmn:dataOutputAssociation id="DataOutputAssociation_0ly5q3w">
         <bpmn:targetRef>DataObjectReference_1az834e</bpmn:targetRef>
@@ -218,10 +224,6 @@ tierId = inseratdaten["tierId"]</spiffworkflow:preScript>
         <bpmn:sourceRef>DataObjectReference_1az834e</bpmn:sourceRef>
         <bpmn:targetRef>Property_1iqx1jp</bpmn:targetRef>
       </bpmn:dataInputAssociation>
-      <bpmn:dataInputAssociation id="DataInputAssociation_0x1625j">
-        <bpmn:sourceRef>DataObjectReference_0tmohg1</bpmn:sourceRef>
-        <bpmn:targetRef>Property_1iqx1jp</bpmn:targetRef>
-      </bpmn:dataInputAssociation>
       <bpmn:startEvent id="Event_0zfkdgq">
         <bpmn:outgoing>Flow_17je5q0</bpmn:outgoing>
       </bpmn:startEvent>
@@ -293,6 +295,7 @@ tierId = inseratdaten["tierId"]</spiffworkflow:preScript>
       <bpmn:outgoing>Flow_0rwblx3</bpmn:outgoing>
       <bpmn:outgoing>Flow_1td8z5g</bpmn:outgoing>
     </bpmn:parallelGateway>
+    <bpmn:dataObject id="inseratBearbeitet" name="inseratBearbeitet" />
   </bpmn:process>
   <bpmn:message id="TierAdoptierbereit" name="TierAdoptierbereit" />
   <bpmn:message id="pflegestelle-benachrichtigen" name="pflegestelle-benachrichtigen" />
@@ -335,9 +338,9 @@ tierId = inseratdaten["tierId"]</spiffworkflow:preScript>
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="DataObjectReference_0tmohg1_di" bpmnElement="DataObjectReference_0tmohg1">
-        <dc:Bounds x="722" y="1065" width="36" height="50" />
+        <dc:Bounds x="702" y="1085" width="36" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="710" y="1122" width="61" height="14" />
+          <dc:Bounds x="690" y="1142" width="62" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1ham3w8_di" bpmnElement="Activity_0pflo04">
@@ -523,16 +526,23 @@ tierId = inseratdaten["tierId"]</spiffworkflow:preScript>
         <dc:Bounds x="1610" y="790" width="688" height="60" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="DataOutputAssociation_18hfybu_di" bpmnElement="DataOutputAssociation_18hfybu">
-        <di:waypoint x="640" y="1255" />
-        <di:waypoint x="729" y="1115" />
+        <di:waypoint x="639" y="1255" />
+        <di:waypoint x="710" y="1135" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0fas9m0_di" bpmnElement="DataInputAssociation_0fas9m0">
-        <di:waypoint x="750" y="1115" />
-        <di:waypoint x="796" y="1230" />
+        <di:waypoint x="731" y="1135" />
+        <di:waypoint x="750" y="1180" />
+        <di:waypoint x="785" y="1230" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataInputAssociation_0kunrpb_di" bpmnElement="DataInputAssociation_0kunrpb">
-        <di:waypoint x="758" y="1099" />
-        <di:waypoint x="1029" y="1230" />
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0n04jqy_di" bpmnElement="DataOutputAssociation_0n04jqy">
+        <di:waypoint x="808" y="1230" />
+        <di:waypoint x="820" y="1170" />
+        <di:waypoint x="738" y="1120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_0s5q4kc_di" bpmnElement="DataInputAssociation_0s5q4kc">
+        <di:waypoint x="738" y="1116" />
+        <di:waypoint x="950" y="1190" />
+        <di:waypoint x="1009" y="1230" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataOutputAssociation_0ly5q3w_di" bpmnElement="DataOutputAssociation_0ly5q3w">
         <di:waypoint x="1067" y="1310" />
@@ -550,13 +560,10 @@ tierId = inseratdaten["tierId"]</spiffworkflow:preScript>
         <di:waypoint x="1144" y="1435" />
         <di:waypoint x="1220" y="1305" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="DataInputAssociation_0x1625j_di" bpmnElement="DataInputAssociation_0x1625j">
-        <di:waypoint x="758" y="1094" />
-        <di:waypoint x="1220" y="1186" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0n566fz_di" bpmnElement="DataInputAssociation_0n566fz">
-        <di:waypoint x="1148" y="1450" />
-        <di:waypoint x="1740" y="1105" />
+        <di:waypoint x="1148" y="1457" />
+        <di:waypoint x="1600" y="1370" />
+        <di:waypoint x="1744" y="1147" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1rurmzb_di" bpmnElement="Flow_1rurmzb">
         <di:waypoint x="630" y="850" />
