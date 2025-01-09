@@ -194,7 +194,19 @@ public class Route extends RouteBuilder {
                 .marshal().jacksonXml(MailDto.class)
                 .to("file:messages/pflegestelle?noop=true");
 
-        from("file:messages/pflegestelle").unmarshal().jacksonXml(MailDto.class).marshal().json().to("activemq:queue:backend");
+        // Antwort verfassen und an die Queue schicken
+        from("file:messages/pflegestelle")
+                .unmarshal().jacksonXml(MailDto.class)
+                .filter(simple("${body.subject} == 'Anfrage Tieraufnahme'"))
+                .setBody(simple("confirmed"))
+                .marshal().json().to("activemq:queue:antwort-tieraufnahme");
+
+        // Antwort an dem Prozess weiterleiten
+        from("activemq:queue:antwort-tieraufnahme")
+                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
+                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
+                .setHeader("Spiffworkflow-Api-Key", simple("61e73cfa-6a39-42ae-8a54-b86d016e6197"))
+                .to("http://localhost:8000/v1.0/messages/Rueckmeldung-anfrage");
 
         // Nachrichten an dem Interessenten
         from("activemq:queue:interessent-benachrichtigen")
@@ -213,8 +225,6 @@ public class Route extends RouteBuilder {
                 .marshal().jacksonXml(MailDto.class)
                 .to("file:messages/interessent?noop=true");
 
-        from("file:messages/interessent").unmarshal().jacksonXml(MailDto.class).marshal().json().to("activemq:queue:backend");
-
         // Nachrichten an dem Tierbesitzer
         from("activemq:queue:tierbesitzer-benachrichtigen")
                 .unmarshal(jsonFormat)
@@ -231,8 +241,6 @@ public class Route extends RouteBuilder {
                 })
                 .marshal().jacksonXml(MailDto.class)
                 .to("file:messages/tierbesitzer?noop=true");
-
-        from("file:messages/tierbesitzer").unmarshal().jacksonXml(MailDto.class).marshal().json().to("activemq:queue:backend");
 
     }
 }

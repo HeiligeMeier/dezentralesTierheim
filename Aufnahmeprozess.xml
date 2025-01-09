@@ -94,7 +94,7 @@
                 <bpmn:outgoing>Flow_1pju2wf</bpmn:outgoing>
             </bpmn:exclusiveGateway>
             <bpmn:sequenceFlow id="Flow_10djpli" name="nein" sourceRef="Gateway_11kaa7l" targetRef="Gateway_0zj3jgn">
-                <bpmn:conditionExpression>rueckmeldung["confirmation"] == "not confirmed"</bpmn:conditionExpression>
+                <bpmn:conditionExpression>rueckmeldung == "not confirmed"</bpmn:conditionExpression>
             </bpmn:sequenceFlow>
             <bpmn:receiveTask id="Activity_08t88zk" name="Auf Rückmeldung der Pflegestelle warten" messageRef="Rueckmeldung-anfrage" spiffworkflow:isMatchingCorrelation="false">
                 <bpmn:extensionElements>
@@ -218,7 +218,7 @@
             </bpmn:serviceTask>
             <bpmn:sequenceFlow id="Flow_0xsp6w7" sourceRef="Activity_1tbaymw" targetRef="Event_1cvac9m" />
             <bpmn:sequenceFlow id="Flow_0i99ugz" name="ja" sourceRef="Gateway_11kaa7l" targetRef="Gateway_1s1nro4">
-                <bpmn:conditionExpression>rueckmeldung["confirmation"] == "confirmed"</bpmn:conditionExpression>
+                <bpmn:conditionExpression>rueckmeldung == "confirmed"</bpmn:conditionExpression>
             </bpmn:sequenceFlow>
             <bpmn:sendTask id="Activity_0me9i3p" name="Tierbesitzer informieren" messageRef="Tierbesitzer-benachrichtigen">
                 <bpmn:extensionElements>
