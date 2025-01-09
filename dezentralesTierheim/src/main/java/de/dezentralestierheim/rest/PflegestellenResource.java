@@ -71,6 +71,8 @@ public class PflegestellenResource {
         Boolean aufnahmebereit = body.get("aufnahmebereit");
         pflegestelle.setAufnahmebereit(aufnahmebereit);
 
+        pflegestellenRepository.persist(pflegestelle);
+
         return Response.ok("Pflegestelle " + pflegestellenId + " wurde auf 'aufnahmebereit' = " + aufnahmebereit + " gesetzt.")
                 .build();
     }

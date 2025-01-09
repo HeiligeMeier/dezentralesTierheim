@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
+import java.util.Map;
 
 @Path("/tiere")
 public class TierResource {
@@ -113,7 +114,7 @@ public class TierResource {
     @PUT
     @Path("/{id}/adopted")
     @Transactional
-    public Response adopted(@PathParam("id") Long id) {
+    public Response adopted(@PathParam("id") Long id, Map<String, Boolean> body) {
         Tier tier = tierRepository.findById(id);
 
         // Tier existiert nicht
@@ -123,11 +124,19 @@ public class TierResource {
                     .build());
         }
 
-        tier.setIstAdoptiert(true);
+        if (!body.containsKey("istAdoptiert")) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("'aufnahmebereit' nicht angegeben.")
+                    .build();
+        }
+
+        Boolean istAdoptiert = body.get("istAdoptiert");
+        tier.setIstAdoptiert(istAdoptiert);
 
         tierRepository.persist(tier);
+
         return Response.status(Response.Status.OK)
-                .entity("Tier " + id + " wurde adoptiert")
+                .entity("Tier " + id + ", adoptiert = " + istAdoptiert)
                 .build();
     }
 

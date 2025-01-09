@@ -77,6 +77,8 @@ public class InseratResource {
         Boolean aktiv = body.get("istAktiv");
         inserat.setIstAktiv(aktiv);
 
+        inseratRepository.persist(inserat);
+
         return Response.status(Response.Status.OK)
                 .entity("Inserat " + id + " wurde auf " + aktiv + " gesetzt")
                 .build();
@@ -124,6 +126,28 @@ public class InseratResource {
         // Mindestens ein Inserat gelistet
         return Response.ok(inserate)
                 .header("Cache-Control", "max-age=300")
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public Response deleteInserat(@PathParam("id") Long id) {
+        Inserat inserat = inseratRepository.findById(id);
+
+        // Überprüfen, ob das Inserat existiert
+        if (inserat == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Inserat " + id + " nicht gefunden")
+                    .build();
+        }
+
+        // Löschen des Inserats
+        inseratRepository.delete(inserat);
+
+        // Erfolgreiche Löschbestätigung
+        return Response.status(Response.Status.NO_CONTENT)
+                .entity("Inserat " + id + " wurde erfolgreich gelöscht")
                 .build();
     }
 

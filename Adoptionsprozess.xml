@@ -30,7 +30,7 @@
       <bpmn:text>hier kann man sich Pflegestelle über TierID bei Interessent holen und darüber dann Pflegestelle</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_0lvymyl" associationDirection="None" sourceRef="Event_1opryyo" targetRef="TextAnnotation_1ig60mz" />
-    <bpmn:correlationKey id="CorrelationKey_0c3t5jc" name="MainCorrelationKey">
+    <bpmn:correlationKey id="CorrelationKey_1ksagyd" name="MainCorrelationKey">
       <bpmn:correlationPropertyRef>tierId</bpmn:correlationPropertyRef>
     </bpmn:correlationKey>
   </bpmn:collaboration>
@@ -97,10 +97,10 @@
       <bpmn:sendTask id="Activity_1sbhvgb" name="Pflegestelle über Interessenten informieren" messageRef="pflegestelle-benachrichtigen">
         <bpmn:extensionElements>
           <spiffworkflow:messagePayload>{
-                        "interessent": interessent,
-                        "pflegestelle": pflegestelle,
-                        "messageType": "PflegestelleInteressentInformieren"
-                        }</spiffworkflow:messagePayload>
+            "interessent": interessent,
+            "pflegestelle": pflegestelle,
+            "messageType": "PflegestelleInteressentInformieren"
+            }</spiffworkflow:messagePayload>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1bq98ej</bpmn:incoming>
         <bpmn:outgoing>Flow_1hyyjle</bpmn:outgoing>
@@ -140,9 +140,9 @@
       <bpmn:sendTask id="Activity_1v77s0n" name="Absage zu Adoptionsanfrage senden" messageRef="interessent-benachrichtigen">
         <bpmn:extensionElements>
           <spiffworkflow:messagePayload>{
-                        "interessent": interessent,
-                        "messageType": "AbsageAdoptionsanfrage"
-                        }</spiffworkflow:messagePayload>
+            "interessent": interessent,
+            "messageType": "AbsageInteressentAdoption"
+            }</spiffworkflow:messagePayload>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0cq62e8</bpmn:incoming>
         <bpmn:outgoing>Flow_1hjmyt2</bpmn:outgoing>
@@ -155,8 +155,8 @@
       <bpmn:sendTask id="Activity_0hwsj90" name="Info über erfolgreiche Adoption weitergeben" messageRef="Adoptionsstelle_gefunden2">
         <bpmn:extensionElements>
           <spiffworkflow:messagePayload>{
-"tierId":tierId
-}</spiffworkflow:messagePayload>
+            "tierId":tierId
+            }</spiffworkflow:messagePayload>
           <spiffworkflow:preScript>tierId = interessent["interessiertAnTierID"]</spiffworkflow:preScript>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1bl5okb</bpmn:incoming>
@@ -188,10 +188,10 @@
       <bpmn:sendTask id="Activity_17p0yc9" name="Erinnerung senden" messageRef="pflegestelle-benachrichtigen">
         <bpmn:extensionElements>
           <spiffworkflow:messagePayload>{
-                        "interessent": interessent,
-                        "pflegestelle": pflegestelle,
-                        "messageType": "PflegestelleInteressentInformieren"
-                        }</spiffworkflow:messagePayload>
+            "interessent": interessent,
+            "pflegestelle": pflegestelle,
+            "messageType": "AdoptionsvertragErinnerung"
+            }</spiffworkflow:messagePayload>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1dh9cuv</bpmn:incoming>
         <bpmn:outgoing>Flow_0pbvtwt</bpmn:outgoing>
@@ -215,10 +215,10 @@
       <bpmn:sendTask id="Activity_0rtpuba" name="Erinnerung senden" messageRef="pflegestelle-benachrichtigen">
         <bpmn:extensionElements>
           <spiffworkflow:messagePayload>{
-                        "interessent": interessent,
-                        "pflegestelle": pflegestelle,
-                        "messageType": "PflegestelleInteressentInformieren"
-                        }</spiffworkflow:messagePayload>
+            "interessent": interessent,
+            "pflegestelle": pflegestelle,
+            "messageType": "FeedbackErinnerung"
+            }</spiffworkflow:messagePayload>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0cydjyl</bpmn:incoming>
         <bpmn:outgoing>Flow_1b8l501</bpmn:outgoing>
@@ -231,7 +231,7 @@
       <bpmn:boundaryEvent id="Event_1xe9vrb" name="Alle 72 Stunden" cancelActivity="false" attachedToRef="Activity_12799yg">
         <bpmn:outgoing>Flow_0cydjyl</bpmn:outgoing>
         <bpmn:timerEventDefinition id="TimerEventDefinition_0nuy2yj">
-          <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">"R5/PT72H"</bpmn:timeCycle>
+          <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">"R5/PT10H"</bpmn:timeCycle>
         </bpmn:timerEventDefinition>
       </bpmn:boundaryEvent>
       <bpmn:boundaryEvent id="Event_1fbmota" name="Nach 3 Wochen" attachedToRef="Activity_12799yg">
@@ -316,8 +316,8 @@
           </spiffworkflow:parameters>
         </spiffworkflow:serviceTaskOperator>
         <spiffworkflow:postScript>import json
-adoptiert=adopted.get("body")
-adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
+          adoptiert=adopted.get("body")
+          adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1hhng6o</bpmn:incoming>
       <bpmn:outgoing>Flow_0mfddez</bpmn:outgoing>
@@ -331,9 +331,9 @@ adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
     <bpmn:sendTask id="Activity_06fr7oa" name="Nachricht dass Tier bereits adoptiert wurde senden" messageRef="interessent-benachrichtigen">
       <bpmn:extensionElements>
         <spiffworkflow:messagePayload>{
-                    "interessent": interessent,
-                    "messageType": "AbsageAdoptionsanfrage"
-                    }</spiffworkflow:messagePayload>
+          "interessent": interessent,
+          "messageType": "AbsageAdoptionsanfrage"
+          }</spiffworkflow:messagePayload>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1ei0nvz</bpmn:incoming>
       <bpmn:outgoing>Flow_1nzuw4y</bpmn:outgoing>
@@ -346,7 +346,13 @@ adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
     <bpmn:endEvent id="Event_003ot66" name="Tier schon vergeben">
       <bpmn:incoming>Flow_1nzuw4y</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sendTask id="Activity_1ix7u3c" name="Tier nicht mehr Verfügbar Nachricht senden">
+    <bpmn:sendTask id="Activity_1ix7u3c" name="Tier nicht mehr Verfügbar Nachricht senden" messageRef="interessent-benachrichtigen">
+      <bpmn:extensionElements>
+        <spiffworkflow:messagePayload>{
+          "interessent": interessent,
+          "messageType": "AbsageAdoptionsanfrage"
+          }</spiffworkflow:messagePayload>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_000ebfs</bpmn:incoming>
       <bpmn:outgoing>Flow_1d0rr8r</bpmn:outgoing>
       <bpmn:property id="Property_1giasvb" name="__targetRef_placeholder" />
@@ -376,8 +382,8 @@ adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
   <bpmn:signal id="TierVergeben" name="TierVergeben">
     <bpmn:extensionElements>
       <spiffworkflow:payloadExpression>{
-                "tier": tier
-                }</spiffworkflow:payloadExpression>
+        "tier": tier
+        }</spiffworkflow:payloadExpression>
       <spiffworkflow:variableName>tier</spiffworkflow:variableName>
     </bpmn:extensionElements>
   </bpmn:signal>
@@ -811,7 +817,7 @@ adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
         <di:waypoint x="1860" y="124" />
         <di:waypoint x="1860" y="-160" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1857" y="-21" width="37" height="14" />
+          <dc:Bounds x="1871" y="-21" width="37" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0r9yj8f_di" bpmnElement="Flow_0r9yj8f">
