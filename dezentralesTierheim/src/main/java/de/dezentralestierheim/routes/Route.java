@@ -1,13 +1,13 @@
 package de.dezentralestierheim.routes;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import de.dezentralestierheim.dto.ConfirmationMsg;
 import de.dezentralestierheim.dto.MailDto;
 import de.dezentralestierheim.dto.MailRequestDto;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
-import org.apache.camel.component.jacksonxml.JacksonXMLDataFormat;
 
 @ApplicationScoped
 public class Route extends RouteBuilder {
@@ -194,11 +194,9 @@ public class Route extends RouteBuilder {
                 .marshal().jacksonXml(MailDto.class)
                 .to("file:messages/pflegestelle?noop=true");
 
-        // Antwort verfassen und an die Queue schicken
-        from("file:messages/pflegestelle")
-                .unmarshal().jacksonXml(MailDto.class)
-                .filter(simple("${body.subject} == 'Anfrage Tieraufnahme'"))
-                .setBody(simple("confirmed"))
+        // Antwort lesen und an die Queue schicken
+        from("file:messages/pflegestelle/out")
+                .unmarshal().jacksonXml(ConfirmationMsg.class)
                 .marshal().json().to("activemq:queue:antwort-tieraufnahme");
 
         // Antwort an dem Prozess weiterleiten
