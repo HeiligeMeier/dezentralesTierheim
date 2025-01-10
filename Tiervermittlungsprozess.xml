@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:spiffworkflow="http://spiffworkflow.org/bpmn/schema/1.0/core" id="Definitions_96f6665" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="18.1.1">
   <bpmn:collaboration id="Collaboration_0c0qnb">
-    <bpmn:participant id="Participant_0wbiltp" name="Tiervermittlung" processRef="Process_14rygn" />
+    <bpmn:participant id="Participant_0wbiltp" name="Inseratverwaltungsprozess" processRef="Process_14rygn" />
     <bpmn:participant id="Participant_1dnkt6c" name="Pflegestelle" />
-    <bpmn:participant id="Participant_1popvih" name="Interessenten evaluieren" />
+    <bpmn:participant id="Participant_1popvih" name="Adoptionsprozess" />
     <bpmn:messageFlow id="Flow_1rurmzb" name="Tier adoptierbereit" sourceRef="Participant_1dnkt6c" targetRef="Event_0gfy0pz" />
-    <bpmn:messageFlow id="Flow_1vo261i" name="Adoptivstelle gefunden" sourceRef="Participant_1popvih" targetRef="Event_1yl4iqa" />
+    <bpmn:messageFlow id="Flow_1vo261i" name="Adoptant gefunden" sourceRef="Participant_1popvih" targetRef="Event_1yl4iqa" />
     <bpmn:messageFlow id="Flow_0ua92u5" name="Tier verstorben" sourceRef="Participant_1dnkt6c" targetRef="Event_022rh2p" />
     <bpmn:correlationKey id="CorrelationKey_1tykql3" name="MainCorrelationKey">
       <bpmn:correlationPropertyRef>tierId</bpmn:correlationPropertyRef>
@@ -27,11 +27,12 @@
         <bpmn:flowNodeRef>Activity_1s6blz3</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_07o3bov</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_0wyxw52</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_1yl4iqa</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_08rt0oa</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_0gp6u3l</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_022rh2p</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_1p7jlp2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_022rh2p</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1yl4iqa</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0nu180w</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:dataObjectReference id="DataObjectReference_1h6wipw" />
@@ -46,18 +47,18 @@
         </bpmn:extensionElements>
       </bpmn:messageEventDefinition>
     </bpmn:startEvent>
-    <bpmn:userTask id="Activity_0kw6fon" name="Inserat überprüfen">
+    <bpmn:userTask id="Activity_0kw6fon" name="Inhalt des Inserats kontrollieren">
       <bpmn:extensionElements>
         <spiffworkflow:properties>
-          <spiffworkflow:property name="formJsonSchemaFilename" value="inserat-ueberpruefen-schema-schema.json" />
-          <spiffworkflow:property name="formUiSchemaFilename" value="inserat-ueberpruefen-schema-uischema.json" />
+          <spiffworkflow:property name="formJsonSchemaFilename" value="inserat-ueberpruefen-schema.json" />
+          <spiffworkflow:property name="formUiSchemaFilename" value="inserat-ueberpruefen-uischema.json" />
         </spiffworkflow:properties>
         <spiffworkflow:preScript>bild = inseratdaten["bild"]
-          inseratText = inseratdaten["inseratText"]
-          istAktiv = inseratdaten["istAktiv"]
-          tierId = inseratdaten["tierId"]</spiffworkflow:preScript>
+inseratText = inseratdaten["inseratText"]
+istAktiv = inseratdaten["istAktiv"]
+tierId = inseratdaten["tierId"]</spiffworkflow:preScript>
         <spiffworkflow:postScript>inseratdaten["inseratText"] = inseratText
-          inseratdaten["bild"] = bild
+inseratdaten["bild"] = bild
         </spiffworkflow:postScript>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0mndmtm</bpmn:incoming>
@@ -117,11 +118,11 @@
     <bpmn:sequenceFlow id="Flow_09tzpd1" sourceRef="Activity_1y2mamv" targetRef="Gateway_07o3bov" />
     <bpmn:sequenceFlow id="Flow_1q3yvc7" sourceRef="Activity_1s6blz3" targetRef="Gateway_07o3bov" />
     <bpmn:dataObject id="adoptionsinformationen" name="adoptionsinformationen" />
-    <bpmn:endEvent id="Event_0tpkfeh" name="Tier vergeben">
+    <bpmn:endEvent id="Event_0tpkfeh" name="Tier adoptiert">
       <bpmn:incoming>Flow_0m0t30b</bpmn:incoming>
       <bpmn:signalEventDefinition id="SignalEventDefinition_01k6iij" signalRef="TierVergeben" />
     </bpmn:endEvent>
-    <bpmn:serviceTask id="Activity_0d135gv" name="Tier Adoption verbuchen">
+    <bpmn:serviceTask id="Activity_0d135gv" name="Adoption des Tiers verbuchen">
       <bpmn:extensionElements>
         <spiffworkflow:serviceTaskOperator id="http/PutRequestV2">
           <spiffworkflow:parameters>
@@ -141,7 +142,7 @@
         <bpmn:targetRef>Property_0c8te2m</bpmn:targetRef>
       </bpmn:dataInputAssociation>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_0eck89l" name="Pflegestellen Kapazität anpassen">
+    <bpmn:serviceTask id="Activity_0eck89l" name="Auslastung der Pflegestelle anpassen">
       <bpmn:extensionElements>
         <spiffworkflow:serviceTaskOperator id="http/PutRequestV2">
           <spiffworkflow:parameters>
@@ -171,7 +172,7 @@
       <bpmn:incoming>Flow_04e8ral</bpmn:incoming>
       <bpmn:signalEventDefinition id="SignalEventDefinition_1gkmcgr" />
     </bpmn:endEvent>
-    <bpmn:serviceTask id="Activity_13cp82g" name="Inserat wegen Tod schließen">
+    <bpmn:serviceTask id="Activity_13cp82g" name="Inserat schließen">
       <bpmn:extensionElements>
         <spiffworkflow:serviceTaskOperator id="http/PutRequestV2">
           <spiffworkflow:parameters>
@@ -211,7 +212,7 @@
         <bpmn:targetRef>Property_0mob79j</bpmn:targetRef>
       </bpmn:dataInputAssociation>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_1s6blz3" name="Pflegestellen Kapazität anpassen">
+    <bpmn:serviceTask id="Activity_1s6blz3" name="Auslastung der Pflegestelle anpassen">
       <bpmn:extensionElements>
         <spiffworkflow:serviceTaskOperator id="http/PutRequestV2">
           <spiffworkflow:parameters>
@@ -237,8 +238,9 @@
       <bpmn:incoming>Flow_1q3yvc7</bpmn:incoming>
       <bpmn:outgoing>Flow_04e8ral</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:subProcess id="Activity_0wyxw52">
+    <bpmn:subProcess id="Activity_0wyxw52" name="Warteprozess">
       <bpmn:incoming>Flow_1gbjz1g</bpmn:incoming>
+      <bpmn:outgoing>Flow_1jjpal4</bpmn:outgoing>
       <bpmn:property id="Property_1iqx1jp" name="__targetRef_placeholder" />
       <bpmn:dataInputAssociation id="DataInputAssociation_1743vw2">
         <bpmn:sourceRef>DataObjectReference_1az834e</bpmn:sourceRef>
@@ -247,7 +249,7 @@
       <bpmn:startEvent id="Event_0zfkdgq">
         <bpmn:outgoing>Flow_17je5q0</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:manualTask id="Activity_0gcvh3k" name="Interessentenevaluierung abwarten">
+      <bpmn:manualTask id="Activity_0gcvh3k" name="Interessenten-evaluierung abwarten">
         <bpmn:extensionElements />
         <bpmn:incoming>Flow_17je5q0</bpmn:incoming>
         <bpmn:outgoing>Flow_1s6ibk1</bpmn:outgoing>
@@ -285,7 +287,7 @@
       <bpmn:outgoing>Flow_1dous4u</bpmn:outgoing>
       <bpmn:outgoing>Flow_1plda6e</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:serviceTask id="Activity_0gp6u3l" name="Inserat wegen Adoption schließen">
+    <bpmn:serviceTask id="Activity_0gp6u3l" name="Inserat schließen">
       <bpmn:extensionElements>
         <spiffworkflow:serviceTaskOperator id="http/PutRequestV2">
           <spiffworkflow:parameters>
@@ -321,6 +323,10 @@
     </bpmn:parallelGateway>
     <bpmn:dataObject id="inseratBearbeitet" name="inseratBearbeitet" />
     <bpmn:dataObjectReference id="DataStoreReference_1p3etsv" dataObjectRef="inseratdaten" />
+    <bpmn:sequenceFlow id="Flow_1jjpal4" sourceRef="Activity_0wyxw52" targetRef="Event_0nu180w" />
+    <bpmn:endEvent id="Event_0nu180w" name="Inserat geschlossen">
+      <bpmn:incoming>Flow_1jjpal4</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmn:message id="TierAdoptierbereit" name="TierAdoptierbereit" />
   <bpmn:message id="pflegestelle-benachrichtigen" name="pflegestelle-benachrichtigen" />
@@ -349,11 +355,11 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0c0qnb">
       <bpmndi:BPMNShape id="Participant_0wbiltp_di" bpmnElement="Participant_0wbiltp" isHorizontal="true">
-        <dc:Bounds x="550" y="920" width="1748" height="1230" />
+        <dc:Bounds x="550" y="920" width="1748" height="990" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_0gfs14i_di" bpmnElement="Lane_0gfs14i" isHorizontal="true">
-        <dc:Bounds x="580" y="920" width="1718" height="1230" />
+        <dc:Bounds x="580" y="920" width="1718" height="990" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0l43xqq_di" bpmnElement="Event_0gfy0pz">
@@ -367,8 +373,10 @@
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="DataObjectReference_0tmohg1_di" bpmnElement="DataObjectReference_0tmohg1">
-        <dc:Bounds x="702" y="1085" width="36" height="50" />
-        <bpmndi:BPMNLabel />
+        <dc:Bounds x="702" y="1055" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="689" y="1033" width="62" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1ham3w8_di" bpmnElement="Activity_0pflo04">
         <dc:Bounds x="1000" y="1230" width="100" height="80" />
@@ -383,7 +391,7 @@
       <bpmndi:BPMNShape id="Event_0jsnlp5_di" bpmnElement="Event_0tpkfeh">
         <dc:Bounds x="2162" y="1212" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2146" y="1263" width="68" height="14" />
+          <dc:Bounds x="2149" y="1263" width="64" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_15n53vd_di" bpmnElement="Activity_0d135gv">
@@ -420,12 +428,14 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0wyxw52_di" bpmnElement="Activity_0wyxw52" isExpanded="true">
         <dc:Bounds x="1220" y="1170" width="350" height="200" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0zfkdgq_di" bpmnElement="Event_0zfkdgq">
         <dc:Bounds x="1260" y="1252" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1ybbaie_di" bpmnElement="Activity_0gcvh3k">
         <dc:Bounds x="1350" y="1230" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_05mu5nl_di" bpmnElement="Event_05mu5nl">
         <dc:Bounds x="1512" y="1252" width="36" height="36" />
@@ -448,16 +458,22 @@
       <bpmndi:BPMNShape id="Gateway_1swnswg_di" bpmnElement="Gateway_1p7jlp2">
         <dc:Bounds x="1555" y="1565" width="50" height="50" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0nu180w_di" bpmnElement="Event_0nu180w">
+        <dc:Bounds x="1602" y="1252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1589" y="1295" width="62" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0s776gm_di" bpmnElement="Event_022rh2p">
         <dc:Bounds x="1552" y="1152" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1573" y="1143" width="73" height="14" />
+          <dc:Bounds x="1583" y="1143" width="73" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1nfc8qs_di" bpmnElement="Event_1yl4iqa">
         <dc:Bounds x="1472" y="1152" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1458" y="1195" width="64" height="14" />
+          <dc:Bounds x="1408" y="1143" width="64" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0mndmtm_di" bpmnElement="Flow_0mndmtm">
@@ -545,29 +561,33 @@
         <di:waypoint x="1490" y="1110" />
         <di:waypoint x="1655" y="1110" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1jjpal4_di" bpmnElement="Flow_1jjpal4">
+        <di:waypoint x="1570" y="1270" />
+        <di:waypoint x="1602" y="1270" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_1rct26a_di" bpmnElement="Participant_1dnkt6c" isHorizontal="true">
         <dc:Bounds x="550" y="790" width="1030" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_0yy500v_di" bpmnElement="Participant_1popvih" isHorizontal="true">
         <dc:Bounds x="1610" y="790" width="688" height="60" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="DataOutputAssociation_18hfybu_di" bpmnElement="DataOutputAssociation_18hfybu">
-        <di:waypoint x="639" y="1255" />
-        <di:waypoint x="710" y="1135" />
+        <di:waypoint x="638" y="1254" />
+        <di:waypoint x="713" y="1105" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0fas9m0_di" bpmnElement="DataInputAssociation_0fas9m0">
-        <di:waypoint x="731" y="1135" />
-        <di:waypoint x="750" y="1180" />
-        <di:waypoint x="785" y="1230" />
+        <di:waypoint x="732" y="1105" />
+        <di:waypoint x="793" y="1230" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataOutputAssociation_0n04jqy_di" bpmnElement="DataOutputAssociation_0n04jqy">
-        <di:waypoint x="808" y="1230" />
-        <di:waypoint x="820" y="1170" />
-        <di:waypoint x="738" y="1120" />
+        <di:waypoint x="800" y="1230" />
+        <di:waypoint x="800" y="1190" />
+        <di:waypoint x="738" y="1104" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0s5q4kc_di" bpmnElement="DataInputAssociation_0s5q4kc">
-        <di:waypoint x="738" y="1116" />
+        <di:waypoint x="738" y="1089" />
         <di:waypoint x="950" y="1190" />
         <di:waypoint x="1009" y="1230" />
       </bpmndi:BPMNEdge>
@@ -613,7 +633,7 @@
         <di:waypoint x="630" y="850" />
         <di:waypoint x="630" y="1252" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="601" y="1043" width="90" height="14" />
+          <dc:Bounds x="636" y="883" width="88" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1vo261i_di" bpmnElement="Flow_1vo261i">
@@ -622,14 +642,14 @@
         <di:waypoint x="1490" y="1031" />
         <di:waypoint x="1490" y="1152" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2009" y="1010" width="62" height="27" />
+          <dc:Bounds x="2037" y="876" width="47" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0ua92u5_di" bpmnElement="Flow_0ua92u5">
         <di:waypoint x="1570" y="850" />
         <di:waypoint x="1570" y="1152" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1549" y="998" width="73" height="14" />
+          <dc:Bounds x="1583" y="883" width="73" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
