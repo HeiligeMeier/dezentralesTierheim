@@ -203,7 +203,12 @@ public class Route extends RouteBuilder {
         from("activemq:queue:antwort-tieraufnahme")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                .setHeader("Spiffworkflow-Api-Key", simple("61e73cfa-6a39-42ae-8a54-b86d016e6197"))
+                //Raluca
+                //.setHeader("Spiffworkflow-Api-Key", simple("61e73cfa-6a39-42ae-8a54-b86d016e6197"))
+                //Stefan
+                //.setHeader("Spiffworkflow-Api-Key", simple("5d7c33e0-f1e3-4ee0-9743-ac6ca4480ce9"))
+                //Melanie
+                .setHeader("Spiffworkflow-Api-Key", simple("a75569c3-a27e-4fbe-b825-317b3a4ab804"))
                 .to("http://localhost:8000/v1.0/messages/Rueckmeldung-anfrage");
 
         // Nachrichten an dem Interessenten
