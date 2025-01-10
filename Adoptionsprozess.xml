@@ -246,7 +246,7 @@
       <bpmn:boundaryEvent id="Event_1xe9vrb" name="Alle 72 Stunden" cancelActivity="false" attachedToRef="Activity_12799yg">
         <bpmn:outgoing>Flow_0cydjyl</bpmn:outgoing>
         <bpmn:timerEventDefinition id="TimerEventDefinition_0nuy2yj">
-          <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">"R5/PT10H"</bpmn:timeCycle>
+          <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">"R5/P3D"</bpmn:timeCycle>
         </bpmn:timerEventDefinition>
       </bpmn:boundaryEvent>
       <bpmn:boundaryEvent id="Event_1fbmota" name="Nach 3 Wochen" attachedToRef="Activity_12799yg">
@@ -356,8 +356,8 @@
           </spiffworkflow:parameters>
         </spiffworkflow:serviceTaskOperator>
         <spiffworkflow:postScript>import json
-adoptiert=adopted.get("body")
-adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
+          adoptiert=adopted.get("body")
+          adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1hhng6o</bpmn:incoming>
       <bpmn:outgoing>Flow_0mfddez</bpmn:outgoing>
@@ -798,7 +798,7 @@ adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_1flpxue_di" bpmnElement="DataInputAssociation_1flpxue">
         <di:waypoint x="248" y="43" />
-        <di:waypoint x="2160" y="339" />
+        <di:waypoint x="2160" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0lcp8hx_di" bpmnElement="DataInputAssociation_0lcp8hx">
         <di:waypoint x="678" y="510" />
