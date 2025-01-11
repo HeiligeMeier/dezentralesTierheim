@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 
 import java.time.LocalDate;
 
+// Melanie
 @Entity
 public class Interessent extends PanacheEntity {
 

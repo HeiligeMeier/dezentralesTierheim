@@ -62,6 +62,7 @@ public class PflegestellenResource {
                     .build();
         }
 
+        // aufnahmebereit nicht im Body des Calls
         if (!body.containsKey("aufnahmebereit")) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("'aufnahmebereit' nicht angegeben.")
@@ -139,7 +140,7 @@ public class PflegestellenResource {
         return Response.status(Response.Status.OK).build();
     }
 
-    //
+    // Raluca
     @PUT
     @Path("/fuer-tier/{id}/erhoehen")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -236,5 +237,4 @@ public class PflegestellenResource {
                 .header("Cache-Control", "max-age=300")
                 .build();
     }
-
 }

@@ -68,6 +68,7 @@ public class InseratResource {
                     .build());
         }
 
+        // istAktiv fehlt im Body des Calls
         if (!body.containsKey("istAktiv")) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("'istAktiv' nicht angegeben.")
@@ -97,7 +98,6 @@ public class InseratResource {
                     .build();
         }
 
-        // Mindestens ein Inserat gelistet
         return Response.ok(inserat)
                 .header("Cache-Control", "max-age=300")
                 .build();
@@ -108,11 +108,10 @@ public class InseratResource {
     public Response getInserate(@QueryParam("istAktiv") Boolean istAktiv) {
         List<Inserat> inserate;
 
+        // Optionale Filterung nach aktiven Inseraten
         if (istAktiv != null) {
-            // Filterung basierend auf dem Parameter istAktiv
             inserate = inseratRepository.find("istAktiv", istAktiv).list();
         } else {
-            // Alle Inserate, wenn kein Filter angegeben
             inserate = inseratRepository.listAll();
         }
 
@@ -123,12 +122,12 @@ public class InseratResource {
                     .build();
         }
 
-        // Mindestens ein Inserat gelistet
         return Response.ok(inserate)
                 .header("Cache-Control", "max-age=300")
                 .build();
     }
 
+    // Stefan
     @DELETE
     @Path("/{id}")
     @Transactional
@@ -145,10 +144,8 @@ public class InseratResource {
         // Löschen des Inserats
         inseratRepository.delete(inserat);
 
-        // Erfolgreiche Löschbestätigung
         return Response.status(Response.Status.NO_CONTENT)
                 .entity("Inserat " + id + " wurde erfolgreich gelöscht")
                 .build();
     }
-
 }

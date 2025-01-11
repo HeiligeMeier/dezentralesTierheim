@@ -4,6 +4,7 @@ import de.dezentralestierheim.jpa.Interessent;
 import de.dezentralestierheim.jpa.Pflegestelle;
 import de.dezentralestierheim.jpa.Tier;
 
+// Raluca
 public class MailRequestDto {
     private Pflegestelle pflegestelle;
     private Tier tier;

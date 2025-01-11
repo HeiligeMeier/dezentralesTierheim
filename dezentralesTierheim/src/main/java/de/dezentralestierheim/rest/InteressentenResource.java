@@ -128,14 +128,13 @@ public class InteressentenResource {
     public Response getInteressent(@PathParam("id") Long id) {
         Interessent interessent = interessentenRepository.findById(id);
 
-        // Keine Interessenten gelistet
+        // Kein Interessent gelistet
         if (interessent == null) {
             return Response.status(Response.Status.NO_CONTENT)
                     .entity("Interessent " + id + " nicht gefunden")
                     .build();
         }
 
-        // Mindestens ein Interessent gelistet
         return Response.ok(interessent)
                 .header("Cache-Control", "max-age=300")
                 .build();
@@ -153,7 +152,6 @@ public class InteressentenResource {
                     .build();
         }
 
-        // mind. 1 Interessent gelistet
         return Response.ok(i)
                 .header("Cache-Control", "max-age=300")
                 .build();

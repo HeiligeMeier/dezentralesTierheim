@@ -1,5 +1,6 @@
 package de.dezentralestierheim.dto;
 
+// Raluca
 public class ConfirmationMsg {
     private String confirmation;
 

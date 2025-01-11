@@ -9,6 +9,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 
+// Die Messages wurden gemeinsam formuliert
 @ApplicationScoped
 public class Route extends RouteBuilder {
 
@@ -18,7 +19,7 @@ public class Route extends RouteBuilder {
         mail.setFrom("tierheim@gmail.com");
 
         switch (mailRequestDto.getMessageType()) {
-            // Aufnahmeprozess: Pflegestelle über Tieraufnahme benachrichtigen
+            // Tieraufnahmeprozess: Pflegestelle über Tieraufnahme benachrichtigen
             case "AnfrageTieraufnahme":
                 mail.setSubject("Anfrage Tieraufnahme");
 
@@ -32,7 +33,7 @@ public class Route extends RouteBuilder {
                         "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
-            // Aufnahmeprozess: Erinnerung an Pflegestelle senden
+            // Tieraufnahmeprozess: Erinnerung an Pflegestelle senden
             case "ErinnerungAnfrageTieraufnahme":
                 mail.setSubject("Erinnerung: Anfrage Tieraufnahme");
 
@@ -47,7 +48,7 @@ public class Route extends RouteBuilder {
                         "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
-            // Aufnahmeprozess: Bei Pflegestelle Aufnahmebreitschaft für Zukunft abfragen
+            // Tieraufnahmeprozess: Bei Pflegestelle Aufnahmebereitschaft für Zukunft abfragen
             case "NachfrageBereitschaftAufnahme":
                 mail.setSubject("Nachfrage der Bereitschaft zur Tieraufnahme aufgrund von nicht-Rückmeldung");
 
@@ -60,7 +61,31 @@ public class Route extends RouteBuilder {
                         "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
-            // Adoptionsprozess: Pflegestelle über Interessenten informieren
+            // Tieraufnahmeprozess: Tierbesitzer über Ablehnung der Tieraufnahme informieren
+            case "TierbesitzerInformieren":
+                mail.setSubject("Ablehnung der Tieraufnahme");
+
+                msg = "Guten Tag, \n \n" +
+                        "wir bedauern es sehr, Ihnen mitteilen zu müssen, dass wir Ihr Tier zurzeit leider nicht aufnehmen können. \n" +
+                        "Derzeit sind unsere Kapazitäten erschöpft und es ist uns nicht möglich, weitere Tiere unterzubringen. \n" +
+                        "Bitte wenden Sie sich an eines unserer Nachbartierheime: TSV Beispielhausen e.V. oder Tierheim Wunschkirchen e.V.. \n" +
+                        "Wir bitten um Ihr Verständnis. \n \n" +
+                        "Mit freundlichen Grüßen \n" +
+                        "Ihr Tierschutzverein Musterstadt";
+                break;
+            // Tieraufnahmeprozess: Pflegestelle über Rückzieher informieren
+            case "Rueckzieher":
+                mail.setSubject("Tieraufnahme abgebrochen");
+
+                msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", \n \n" +
+                        "leider müssen wir Ihnen mitteilen, dass wir das Tier" + mailRequestDto.getTier().getName() + " nicht aufnehmen werden, da der Tierbesitzer die Abgabe abgebrochen hat. \n" +
+                        "Wir bitten um Ihr Verständnis und bitten von weiteren Nachfragen abzusehen. \n" +
+                        "Sie sind von unserem System weiterhin priorisiert und werden daher bei der nächsten Tieraufnahme, die zu Ihren Anforderungen passt, kontaktiert. \n" +
+                        "Wir bedanken uns für Ihr Engagement. \n \n" +
+                        "Mit freundlichen Grüßen \n" +
+                        "Ihr Tierschutzverein Musterstadt";
+                break;
+            // Adoptionsprozess: Feedback zum Interessenten einholen
             case "PflegestelleInteressentInformieren":
 
                 mail.setSubject("Interessent gefunden");
@@ -76,7 +101,7 @@ public class Route extends RouteBuilder {
                         "Mit freundlichen Grüßen \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
-            // Adoptionsprozess: Erinnerung senden (1)
+            // Adoptionsprozess: Pflegestelle an Feedback erinnern
             case "FeedbackErinnerung":
 
                 mail.setSubject("Erinnerung: Feedback zu Interessenten benötigt");
@@ -94,7 +119,7 @@ public class Route extends RouteBuilder {
                         "Mit freundlichen Grüßen \n \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
-            // Adoptionsprozess: Erinnerung senden (2)
+            // Adoptionsprozess: Pflegestelle an Abgabe des Adoptions-vertrags erinnern
             case "AdoptionsvertragErinnerung":
 
                 mail.setSubject("Erinnerung: Adoptionsvertrag benötigt");
@@ -112,32 +137,8 @@ public class Route extends RouteBuilder {
                         "Mit freundlichen Grüßen \n \n" +
                         "Ihr Tierschutzverein Musterstadt";
                 break;
-            // Aufnahmeprozess: Tierbesitzer informieren
-            case "TierbesitzerInformieren":
-                mail.setSubject("Ablehnung der Tieraufnahme");
-
-                msg = "Guten Tag, \n \n" +
-                        "wir bedauern es sehr, Ihnen mitteilen zu müssen, dass wir Ihr Tier zurzeit leider nicht aufnehmen können. \n" +
-                        "Derzeit sind unsere Kapazitäten erschöpft und es ist uns nicht möglich, weitere Tiere unterzubringen. \n" +
-                        "Bitte wenden Sie sich an eines unserer Nachbartierheime: TSV Beispielhausen e.V. oder Tierheim Wunschkirchen e.V.. \n" +
-                        "Wir bitten um Ihr Verständnis. \n \n" +
-                        "Mit freundlichen Grüßen \n" +
-                        "Ihr Tierschutzverein Musterstadt";
-                break;
-            // Aufnahmeprozess: Pflegestelle über Rückzieher informieren
-            case "Rueckzieher":
-                mail.setSubject("Tieraufnahme abgebrochen");
-
-                msg = "Guten Tag Pflegestelle " + mailRequestDto.getPflegestelle().getName() + ", \n \n" +
-                        "leider müssen wir Ihnen mitteilen, dass wir das Tier" + mailRequestDto.getTier().getName() + " nicht aufnehmen werden, da der Tierbesitzer die Abgabe abgebrochen hat. \n" +
-                        "Wir bitten um Ihr Verständnis und bitten von weiteren Nachfragen abzusehen. \n" +
-                        "Sie sind von unserem System weiterhin priorisiert und werden daher bei der nächsten Tieraufnahme, die zu Ihren Anforderungen passt, kontaktiert. \n" +
-                        "Wir bedanken uns für Ihr Engagement. \n \n" +
-                        "Mit freundlichen Grüßen \n" +
-                        "Ihr Tierschutzverein Musterstadt";
-                break;
             // Adoptionsprozess: Nachricht, dass Tier bereits adoptiert wurde, senden
-            // Adoptionsprozess: Tier nicht mehr verfügbar Nachricht senden
+            // Adoptionsprozess: Interessent über Adoption des Tiers informieren
             case "AbsageAdoptionsanfrage":
                 mail.setSubject("Absage der Adoptionsanfrage");
 
@@ -170,6 +171,7 @@ public class Route extends RouteBuilder {
         return mail;
     }
 
+    // Raluca
     @Override
     public void configure() throws Exception {
 
@@ -199,19 +201,19 @@ public class Route extends RouteBuilder {
                 .unmarshal().jacksonXml(ConfirmationMsg.class)
                 .marshal().json().to("activemq:queue:antwort-tieraufnahme");
 
-        // Antwort an dem Prozess weiterleiten
+        // Antwort an den Prozess weiterleiten
         from("activemq:queue:antwort-tieraufnahme")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                //Raluca
-                //.setHeader("Spiffworkflow-Api-Key", simple("61e73cfa-6a39-42ae-8a54-b86d016e6197"))
-                //Stefan
-                //.setHeader("Spiffworkflow-Api-Key", simple("5d7c33e0-f1e3-4ee0-9743-ac6ca4480ce9"))
-                //Melanie
-                .setHeader("Spiffworkflow-Api-Key", simple("a75569c3-a27e-4fbe-b825-317b3a4ab804"))
+//                 Raluca
+//                .setHeader("Spiffworkflow-Api-Key", simple("61e73cfa-6a39-42ae-8a54-b86d016e6197"))
+//                 Stefan
+//                .setHeader("Spiffworkflow-Api-Key", simple("5d7c33e0-f1e3-4ee0-9743-ac6ca4480ce9"))
+//                 Melanie
+//                .setHeader("Spiffworkflow-Api-Key", simple("a75569c3-a27e-4fbe-b825-317b3a4ab804"))
                 .to("http://localhost:8000/v1.0/messages/Rueckmeldung-anfrage");
 
-        // Nachrichten an dem Interessenten
+        // Nachrichten an den Interessenten
         from("activemq:queue:interessent-benachrichtigen")
                 .unmarshal(jsonFormat)
                 .process(exchange -> {
@@ -228,7 +230,7 @@ public class Route extends RouteBuilder {
                 .marshal().jacksonXml(MailDto.class)
                 .to("file:messages/interessent?noop=true");
 
-        // Nachrichten an dem Tierbesitzer
+        // Nachrichten an den Tierbesitzer
         from("activemq:queue:tierbesitzer-benachrichtigen")
                 .unmarshal(jsonFormat)
                 .process(exchange -> {
@@ -244,6 +246,5 @@ public class Route extends RouteBuilder {
                 })
                 .marshal().jacksonXml(MailDto.class)
                 .to("file:messages/tierbesitzer?noop=true");
-
     }
 }

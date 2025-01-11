@@ -58,6 +58,7 @@ public class TierResource {
         return Response.status(Response.Status.OK).build();
     }
 
+    // Melanie
     @PUT
     @Path("/{id}/keineKapazitaet")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -78,9 +79,7 @@ public class TierResource {
         return Response.status(Response.Status.OK).build();
     }
 
-
-
-    // Stefan
+    // Stefan & Melanie
     @PUT
     @Path("/{id}/rueckzieher")
     @Transactional
@@ -140,44 +139,6 @@ public class TierResource {
                 .build();
     }
 
-    // Stefan
-    @GET
-    @Path("/{id}")
-    public Response getTier(@PathParam("id") Long id) {
-        Tier tier = tierRepository.findById(id);
-
-        // Tier existiert nicht
-        if (tier == null) {
-            throw new NotFoundException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("Tier " + id + " nicht gefunden")
-                    .build());
-        }
-
-        // Tier existiert
-        return Response.ok(tier)
-                .header("Cache-Control", "max-age=300")
-                .build();
-    }
-
-    // Stefan
-    @GET
-    public Response getTiere() {
-        List<Tier> tiere = tierRepository.listAll();
-
-        // Keine Tiere gelistet
-        if (tiere.isEmpty()) {
-            return Response.status(Response.Status.NO_CONTENT)
-                    .entity("Keine Tiere gelistet")
-                    .build();
-        }
-
-
-        // mind. 1 Tier gelistet
-        return Response.ok(tiere)
-                .header("Cache-Control", "max-age=300")
-                .build();
-    }
-
     // Raluca
     @PATCH
     @Path("/{id}")
@@ -223,4 +184,41 @@ public class TierResource {
         return Response.ok(tier.getIstAdoptiert()).build();
     }
 
+    // Stefan
+    @GET
+    @Path("/{id}")
+    public Response getTier(@PathParam("id") Long id) {
+        Tier tier = tierRepository.findById(id);
+
+        // Tier existiert nicht
+        if (tier == null) {
+            throw new NotFoundException(Response.status(Response.Status.NOT_FOUND)
+                    .entity("Tier " + id + " nicht gefunden")
+                    .build());
+        }
+
+        // Tier existiert
+        return Response.ok(tier)
+                .header("Cache-Control", "max-age=300")
+                .build();
+    }
+
+    // Stefan
+    @GET
+    public Response getTiere() {
+        List<Tier> tiere = tierRepository.listAll();
+
+        // Keine Tiere gelistet
+        if (tiere.isEmpty()) {
+            return Response.status(Response.Status.NO_CONTENT)
+                    .entity("Keine Tiere gelistet")
+                    .build();
+        }
+
+
+        // mind. 1 Tier gelistet
+        return Response.ok(tiere)
+                .header("Cache-Control", "max-age=300")
+                .build();
+    }
 }

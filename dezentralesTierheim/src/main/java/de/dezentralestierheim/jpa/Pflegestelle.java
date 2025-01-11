@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 
 import java.time.LocalDate;
 
+// Raluca
 @Entity
 public class Pflegestelle extends PanacheEntity {
     @Enumerated(EnumType.STRING)

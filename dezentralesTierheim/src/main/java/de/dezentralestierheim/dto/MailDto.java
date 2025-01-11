@@ -1,5 +1,6 @@
 package de.dezentralestierheim.dto;
 
+// Raluca
 public class MailDto {
     private String from;
     private String to;
