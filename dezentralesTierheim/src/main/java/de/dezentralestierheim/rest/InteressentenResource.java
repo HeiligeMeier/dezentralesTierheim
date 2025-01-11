@@ -11,6 +11,7 @@ import java.time.Period;
 import java.time.LocalDate;
 import java.util.List;
 
+// Melanie
 @Path("/interessenten")
 public class InteressentenResource {
     private final InteressentRepository interessentenRepository;

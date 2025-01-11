@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
+// Stefan
 @Path("/inserat")
 public class InseratResource {
     private final InseratRepository inseratRepository;
