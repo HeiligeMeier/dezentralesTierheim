@@ -1,0 +1,30 @@
+{
+  "title": "Bewertung",
+  "description": "Bitte bewerten Sie den Interessenten:",
+  "type": "object",
+  "required": [
+    "geeignet"
+  ],
+  "properties": {
+    "tierName":{
+      "type": "string",
+      "title": "Name des Tiers"
+    },
+    "interessentName":{
+      "type": "string",
+      "title": "Name des Interessenten"
+    },
+    "bewertung": {
+      "type": "string",
+      "title": "Bewertung Freitext (optional)"
+    },
+    "geeignet": {
+      "title": "Geeignet für das Tier?",
+      "type": "string",
+      "anyOf": [
+       { "const": "ja", "title": "Ja" },
+        { "const": "nein", "title": "Nein" }
+      ]
+    }
+  }
+}
