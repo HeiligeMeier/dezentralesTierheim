@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:spiffworkflow="http://spiffworkflow.org/bpmn/schema/1.0/core" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_96f6665" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.0.0-dev">
+    <bpmn:collaboration id="Collaboration_0f0gxv8">
+        <bpmn:participant id="Participant_0b372vn" name="Pflegestellen-benachrichtigen SCIL" processRef="Process_pflegestelle_benachrichtigen_scmnjr9" />
+        <bpmn:participant id="Participant_0feqoeg" name="TSV" />
+        <bpmn:messageFlow id="Flow_1ebbexo" sourceRef="Participant_0feqoeg" targetRef="Event_1ppo8hg" />
+        <bpmn:correlationKey id="CorrelationKey_0ecio0a" name="MainCorrelationKey" />
+    </bpmn:collaboration>
+    <bpmn:process id="Process_pflegestelle_benachrichtigen_scmnjr9" isExecutable="true">
+        <bpmn:sequenceFlow id="Flow_1pabmep" sourceRef="Event_1ppo8hg" targetRef="Activity_0aw0yoe" />
+        <bpmn:exclusiveGateway id="Gateway_05ddynb" name="Erfolgreich gesendet?" default="Flow_1dpbtsz">
+            <bpmn:incoming>Flow_162fqo0</bpmn:incoming>
+            <bpmn:outgoing>Flow_1dpbtsz</bpmn:outgoing>
+            <bpmn:outgoing>Flow_0uyqlnh</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+        <bpmn:sequenceFlow id="Flow_162fqo0" sourceRef="Activity_0aw0yoe" targetRef="Gateway_05ddynb" />
+        <bpmn:sequenceFlow id="Flow_1dpbtsz" name="Ja" sourceRef="Gateway_05ddynb" targetRef="Event_149f2st" />
+        <bpmn:sequenceFlow id="Flow_0uyqlnh" name="Nein" sourceRef="Gateway_05ddynb" targetRef="Event_0hdgoj9">
+            <bpmn:conditionExpression>nachrichtAntwort["http_status"] != 200</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:endEvent id="Event_149f2st" name="Nachricht gesendet">
+            <bpmn:incoming>Flow_1dpbtsz</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:endEvent id="Event_0hdgoj9" name="Nachricht nicht gesendet">
+            <bpmn:incoming>Flow_0uyqlnh</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:serviceTask id="Activity_0aw0yoe" name="Nachricht an Pflegestelle senden">
+            <bpmn:extensionElements>
+                <spiffworkflow:serviceTaskOperator id="http/PostRequestV2" resultVariable="nachrichtAntwort">
+                    <spiffworkflow:parameters>
+                        <spiffworkflow:parameter id="url" type="str" value="&#34;http://host.docker.internal:8161/api/message/pflegestelle-benachrichtigen?type=queue&#34;" />
+                        <spiffworkflow:parameter id="headers" type="any" value="{&#34;Content-Type&#34;:&#34;application/json&#34;, &#34;Authorization&#34;:&#34;Basic YWRtaW46YWRtaW4=&#34;}" />
+                        <spiffworkflow:parameter id="data" type="any" value="nachricht" />
+                        <spiffworkflow:parameter id="basic_auth_username" type="str" />
+                        <spiffworkflow:parameter id="basic_auth_password" type="str" />
+                    </spiffworkflow:parameters>
+                </spiffworkflow:serviceTaskOperator>
+            </bpmn:extensionElements>
+            <bpmn:incoming>Flow_1pabmep</bpmn:incoming>
+            <bpmn:outgoing>Flow_162fqo0</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:startEvent id="Event_1ppo8hg" name="Benachrichtigung fuer Pflegestelle">
+            <bpmn:outgoing>Flow_1pabmep</bpmn:outgoing>
+            <bpmn:messageEventDefinition id="MessageEventDefinition_0vkosgp" messageRef="pflegestelle-benachrichtigen">
+                <bpmn:extensionElements>
+                    <spiffworkflow:messageVariable>nachricht</spiffworkflow:messageVariable>
+                </bpmn:extensionElements>
+            </bpmn:messageEventDefinition>
+        </bpmn:startEvent>
+    </bpmn:process>
+    <bpmn:message id="pflegestelle-benachrichtigen" name="pflegestelle-benachrichtigen" />
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0f0gxv8">
+            <bpmndi:BPMNShape id="Participant_0b372vn_di" bpmnElement="Participant_0b372vn" isHorizontal="true">
+                <dc:Bounds x="-270" y="-60" width="640" height="348" />
+                <bpmndi:BPMNLabel />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Gateway_05ddynb_di" bpmnElement="Gateway_05ddynb" isMarkerVisible="true">
+                <dc:Bounds x="45" y="75" width="50" height="50" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="123" y="90" width="54" height="27" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_149f2st_di" bpmnElement="Event_149f2st">
+                <dc:Bounds x="152" y="2" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="147" y="45" width="47" height="27" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_0hdgoj9_di" bpmnElement="Event_0hdgoj9">
+                <dc:Bounds x="152" y="162" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="134" y="205" width="73" height="27" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_08w0m2y_di" bpmnElement="Activity_0aw0yoe">
+                <dc:Bounds x="-110" y="60" width="100" height="80" />
+                <bpmndi:BPMNLabel />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_1pijtw1_di" bpmnElement="Event_1ppo8hg">
+                <dc:Bounds x="-208" y="82" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="-232" y="125" width="86" height="27" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="Flow_1pabmep_di" bpmnElement="Flow_1pabmep">
+                <di:waypoint x="-172" y="100" />
+                <di:waypoint x="-110" y="100" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_162fqo0_di" bpmnElement="Flow_162fqo0">
+                <di:waypoint x="-10" y="100" />
+                <di:waypoint x="45" y="100" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1dpbtsz_di" bpmnElement="Flow_1dpbtsz">
+                <di:waypoint x="70" y="75" />
+                <di:waypoint x="70" y="20" />
+                <di:waypoint x="152" y="20" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="79" y="45" width="13" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0uyqlnh_di" bpmnElement="Flow_0uyqlnh">
+                <di:waypoint x="70" y="125" />
+                <di:waypoint x="70" y="180" />
+                <di:waypoint x="152" y="180" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="73" y="150" width="24" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="Participant_100gpli_di" bpmnElement="Participant_0feqoeg" isHorizontal="true">
+                <dc:Bounds x="-270" y="-180" width="640" height="60" />
+                <bpmndi:BPMNLabel />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="Flow_1ebbexo_di" bpmnElement="Flow_1ebbexo">
+                <di:waypoint x="-190" y="-120" />
+                <di:waypoint x="-190" y="82" />
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn:definitions>

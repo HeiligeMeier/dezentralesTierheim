@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:spiffworkflow="http://spiffworkflow.org/bpmn/schema/1.0/core" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_96f6665" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.0.0-dev">
+    <bpmn:collaboration id="Collaboration_10yef5z">
+        <bpmn:participant id="Participant_1l91zoa" name="Interessent-benachrichtigen-SCIL" processRef="Process_interessent_benachrichtigen_scil_hyr07sa" />
+        <bpmn:participant id="Participant_0mhcx98" name="TSV" />
+        <bpmn:messageFlow id="Flow_1lrs4xi" sourceRef="Participant_0mhcx98" targetRef="Event_16xc9rf" />
+        <bpmn:correlationKey id="CorrelationKey_1ljzbc6" name="MainCorrelationKey" />
+    </bpmn:collaboration>
+    <bpmn:process id="Process_interessent_benachrichtigen_scil_hyr07sa" isExecutable="true">
+        <bpmn:startEvent id="Event_16xc9rf">
+            <bpmn:outgoing>Flow_0qi7772</bpmn:outgoing>
+            <bpmn:messageEventDefinition id="MessageEventDefinition_1xnuz1h" messageRef="interessent-benachrichtigen">
+                <bpmn:extensionElements>
+                    <spiffworkflow:messageVariable>nachricht</spiffworkflow:messageVariable>
+                </bpmn:extensionElements>
+            </bpmn:messageEventDefinition>
+        </bpmn:startEvent>
+        <bpmn:sequenceFlow id="Flow_0qi7772" sourceRef="Event_16xc9rf" targetRef="Activity_0p0c5o3" />
+        <bpmn:exclusiveGateway id="Gateway_0be7fb8" name="Nachricht gesendet?" default="Flow_0ku5tgc">
+            <bpmn:incoming>Flow_0yfddit</bpmn:incoming>
+            <bpmn:outgoing>Flow_0ku5tgc</bpmn:outgoing>
+            <bpmn:outgoing>Flow_0zmvdxe</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+        <bpmn:sequenceFlow id="Flow_0yfddit" sourceRef="Activity_0p0c5o3" targetRef="Gateway_0be7fb8" />
+        <bpmn:sequenceFlow id="Flow_0ku5tgc" name="Ja" sourceRef="Gateway_0be7fb8" targetRef="Event_0uf5o6i" />
+        <bpmn:endEvent id="Event_1u8ttmz" name="Nachricht nicht gesendet">
+            <bpmn:incoming>Flow_0zmvdxe</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_0zmvdxe" name="Nein" sourceRef="Gateway_0be7fb8" targetRef="Event_1u8ttmz">
+            <bpmn:conditionExpression>nachrichtAntwort["http_status"] != 200</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:endEvent id="Event_0uf5o6i" name="Nachricht gesendet">
+            <bpmn:incoming>Flow_0ku5tgc</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:serviceTask id="Activity_0p0c5o3" name="Benachrichtigung an Interessent senden">
+            <bpmn:extensionElements>
+                <spiffworkflow:serviceTaskOperator id="http/PostRequestV2" resultVariable="nachrichtAntwort">
+                    <spiffworkflow:parameters>
+                        <spiffworkflow:parameter id="url" type="str" value="&#34;http://host.docker.internal:8161/api/message/interessent-benachrichtigen?type=queue&#34;" />
+                        <spiffworkflow:parameter id="headers" type="any" value="{&#34;Content-Type&#34;:&#34;application/json&#34;, &#34;Authorization&#34;:&#34;Basic YWRtaW46YWRtaW4=&#34;}" />
+                        <spiffworkflow:parameter id="data" type="any" value="nachricht" />
+                        <spiffworkflow:parameter id="basic_auth_username" type="str" />
+                        <spiffworkflow:parameter id="basic_auth_password" type="str" />
+                    </spiffworkflow:parameters>
+                </spiffworkflow:serviceTaskOperator>
+            </bpmn:extensionElements>
+            <bpmn:incoming>Flow_0qi7772</bpmn:incoming>
+            <bpmn:outgoing>Flow_0yfddit</bpmn:outgoing>
+        </bpmn:serviceTask>
+    </bpmn:process>
+    <bpmn:message id="interessent-benachrichtigen" name="interessent-benachrichtigen" />
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_10yef5z">
+            <bpmndi:BPMNShape id="Participant_1l91zoa_di" bpmnElement="Participant_1l91zoa" isHorizontal="true">
+                <dc:Bounds x="-150" y="-110" width="650" height="338" />
+                <bpmndi:BPMNLabel />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_1dgnrct_di" bpmnElement="Event_16xc9rf">
+                <dc:Bounds x="-78" y="22" width="36" height="36" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Gateway_0be7fb8_di" bpmnElement="Gateway_0be7fb8" isMarkerVisible="true">
+                <dc:Bounds x="165" y="15" width="50" height="50" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="244" y="30" width="52" height="27" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_1u8ttmz_di" bpmnElement="Event_1u8ttmz">
+                <dc:Bounds x="272" y="132" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="254" y="175" width="73" height="27" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_0uf5o6i_di" bpmnElement="Event_0uf5o6i">
+                <dc:Bounds x="272" y="-68" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="267" y="-25" width="47" height="27" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_179arqo_di" bpmnElement="Activity_0p0c5o3">
+                <dc:Bounds x="10" y="0" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="Flow_0qi7772_di" bpmnElement="Flow_0qi7772">
+                <di:waypoint x="-42" y="40" />
+                <di:waypoint x="10" y="40" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0yfddit_di" bpmnElement="Flow_0yfddit">
+                <di:waypoint x="110" y="40" />
+                <di:waypoint x="165" y="40" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0ku5tgc_di" bpmnElement="Flow_0ku5tgc">
+                <di:waypoint x="190" y="15" />
+                <di:waypoint x="190" y="-50" />
+                <di:waypoint x="272" y="-50" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="199" y="-20" width="13" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0zmvdxe_di" bpmnElement="Flow_0zmvdxe">
+                <di:waypoint x="190" y="65" />
+                <di:waypoint x="190" y="150" />
+                <di:waypoint x="272" y="150" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="193" y="105" width="24" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="Participant_0tcnsxa_di" bpmnElement="Participant_0mhcx98" isHorizontal="true">
+                <dc:Bounds x="-150" y="-230" width="650" height="60" />
+                <bpmndi:BPMNLabel />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="Flow_1lrs4xi_di" bpmnElement="Flow_1lrs4xi">
+                <di:waypoint x="-60" y="-170" />
+                <di:waypoint x="-60" y="22" />
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn:definitions>
