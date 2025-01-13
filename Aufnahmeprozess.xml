@@ -12,23 +12,15 @@
     <bpmn:messageFlow id="Flow_1322wdn" name="Ablehnung" sourceRef="Activity_0me9i3p" targetRef="Participant_055eio8" />
     <bpmn:messageFlow id="Flow_0uu0mpf" name="Nachfrage Aufnahmebereitschaft" sourceRef="Activity_1i7ai0h" targetRef="Participant_01mppw6" />
     <bpmn:messageFlow id="Flow_0xjvbic" name="Rückzieher" sourceRef="Participant_055eio8" targetRef="Event_0ygcz15" />
-    <bpmn:textAnnotation id="TextAnnotation_0sf36uk">
-      <bpmn:text>Suche kann beendet werden</bpmn:text>
-    </bpmn:textAnnotation>
     <bpmn:textAnnotation id="TextAnnotation_0bqyu30">
       <bpmn:text>Bis Pflegestelle gefunden wurde
 oder
 wenn keine freie Pflegestelle vorhanden ist</bpmn:text>
     </bpmn:textAnnotation>
-    <bpmn:textAnnotation id="TextAnnotation_0k8dnl0">
-      <bpmn:text>Suche kann beendet werden</bpmn:text>
-    </bpmn:textAnnotation>
     <bpmn:textAnnotation id="TextAnnotation_0zy0ztl">
       <bpmn:text>Suche wird fortgesetzt</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1garmhn" associationDirection="None" sourceRef="Activity_0ames9m" targetRef="TextAnnotation_0bqyu30" />
-    <bpmn:association id="Association_004rxri" associationDirection="None" sourceRef="Activity_1tbaymw" targetRef="TextAnnotation_0sf36uk" />
-    <bpmn:association id="Association_0rnvsdw" associationDirection="None" sourceRef="Activity_17jp0gj" targetRef="TextAnnotation_0k8dnl0" />
     <bpmn:association id="Association_14elzil" associationDirection="None" sourceRef="Event_15kg9oh" targetRef="TextAnnotation_0zy0ztl" />
     <bpmn:correlationKey id="CorrelationKey_18sndmq" name="MainCorrelationKey" />
   </bpmn:collaboration>
@@ -53,13 +45,13 @@ wenn keine freie Pflegestelle vorhanden ist</bpmn:text>
       <bpmn:standardLoopCharacteristics>
         <bpmn:loopCondition xsi:type="bpmn:tFormalExpression">loopEnd == "true"</bpmn:loopCondition>
       </bpmn:standardLoopCharacteristics>
-      <bpmn:scriptTask id="Activity_17jp0gj" name="Keine aufnahmebereite Pflegestelle vorhanden">
+      <bpmn:scriptTask id="Activity_17jp0gj" name="Suche nach Pflegestelle beenden">
         <bpmn:incoming>Flow_13s336a</bpmn:incoming>
         <bpmn:outgoing>Flow_0dfj9pz</bpmn:outgoing>
         <bpmn:script>loopEnd = "true"
                     endereignis = "Keine Pflegestelle gefunden"</bpmn:script>
       </bpmn:scriptTask>
-      <bpmn:serviceTask id="Activity_1fcb3vk" name="Keine verfügbare Pflegestelle vorhanden">
+      <bpmn:serviceTask id="Activity_1fcb3vk" name="Ablehnung wegen fehlender Kapazität beim Tier verbuchen">
         <bpmn:extensionElements>
           <spiffworkflow:serviceTaskOperator id="http/PutRequestV2" resultVariable="keineKapaResponse">
             <spiffworkflow:parameters>
@@ -373,7 +365,7 @@ wenn keine freie Pflegestelle vorhanden ist</bpmn:text>
         <bpmn:targetRef>Property_1dqnhql</bpmn:targetRef>
       </bpmn:dataInputAssociation>
     </bpmn:sendTask>
-    <bpmn:serviceTask id="Activity_1vkq8ua" name="Tier kann nicht im Tierschutz aufgenommen werden">
+    <bpmn:serviceTask id="Activity_1vkq8ua" name="Rückzieher beim Tier verbuchen">
       <bpmn:extensionElements>
         <spiffworkflow:serviceTaskOperator id="http/PutRequestV2">
           <spiffworkflow:parameters>
@@ -397,7 +389,7 @@ wenn keine freie Pflegestelle vorhanden ist</bpmn:text>
       <bpmn:conditionExpression>endereignis == "Keine Pflegestelle gefunden"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1o7rmi5" name="ja" sourceRef="Gateway_0xi00vu" targetRef="Event_0ijt9n6" />
-    <bpmn:boundaryEvent id="Event_0ygcz15" attachedToRef="Activity_0ames9m">
+    <bpmn:boundaryEvent id="Event_0ygcz15" name="Rückzieher empfangen" attachedToRef="Activity_0ames9m">
       <bpmn:outgoing>Flow_0uu7rsi</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0dskqhb" messageRef="Rueckzieher">
         <bpmn:extensionElements />
@@ -422,11 +414,11 @@ wenn keine freie Pflegestelle vorhanden ist</bpmn:text>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_18ixuf0">
       <bpmndi:BPMNShape id="Participant_0d6nu8p_di" bpmnElement="Participant_0d6nu8p" isHorizontal="true">
-        <dc:Bounds x="-70" y="-280" width="3168" height="1170" />
+        <dc:Bounds x="-70" y="-280" width="3168" height="1320" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_06qeaec_di" bpmnElement="Lane_06qeaec" isHorizontal="true">
-        <dc:Bounds x="-40" y="-280" width="3138" height="1170" />
+        <dc:Bounds x="-40" y="-280" width="3138" height="1320" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0ames9m_di" bpmnElement="Activity_0ames9m" isExpanded="true">
@@ -697,6 +689,9 @@ wenn keine freie Pflegestelle vorhanden ist</bpmn:text>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1vdsyd5_di" bpmnElement="Event_0ygcz15">
         <dc:Bounds x="2332" y="-138" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2322" y="-95" width="56" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1dq0ylm_di" bpmnElement="Flow_1dq0ylm">
         <di:waypoint x="2350" y="340" />
@@ -743,21 +738,13 @@ wenn keine freie Pflegestelle vorhanden ist</bpmn:text>
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_1qkgs32_di" bpmnElement="Participant_01mppw6" isHorizontal="true">
-        <dc:Bounds x="740" y="1020" width="2358" height="120" />
+        <dc:Bounds x="740" y="1170" width="2358" height="120" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_0sf36uk_di" bpmnElement="TextAnnotation_0sf36uk">
-        <dc:Bounds x="2100" y="505" width="100" height="45" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_0bqyu30_di" bpmnElement="TextAnnotation_0bqyu30">
-        <dc:Bounds x="310" y="-110" width="270" height="60" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_0k8dnl0_di" bpmnElement="TextAnnotation_0k8dnl0">
-        <dc:Bounds x="1850" y="-34" width="99.99274985992396" height="43.997615056586184" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1garmhn_di" bpmnElement="Association_1garmhn">
+        <di:waypoint x="1510" y="730" />
+        <di:waypoint x="1518" y="770" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_0zy0ztl_di" bpmnElement="TextAnnotation_0zy0ztl">
         <dc:Bounds x="2235" y="190" width="90" height="40" />
         <bpmndi:BPMNLabel />
@@ -836,27 +823,15 @@ wenn keine freie Pflegestelle vorhanden ist</bpmn:text>
         <di:waypoint x="880" y="10" />
         <di:waypoint x="2500" y="-100" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_1garmhn_di" bpmnElement="Association_1garmhn">
-        <di:waypoint x="640" y="-90" />
-        <di:waypoint x="580" y="-93" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_004rxri_di" bpmnElement="Association_004rxri">
-        <di:waypoint x="2150" y="480" />
-        <di:waypoint x="2150" y="505" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_0rnvsdw_di" bpmnElement="Association_0rnvsdw">
-        <di:waypoint x="1900" y="50" />
-        <di:waypoint x="1900" y="10" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_14elzil_di" bpmnElement="Association_14elzil">
         <di:waypoint x="2279" y="262" />
         <di:waypoint x="2279" y="230" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1u9q8vm_di" bpmnElement="Flow_1u9q8vm">
         <di:waypoint x="2800" y="-80" />
-        <di:waypoint x="2800" y="1020" />
+        <di:waypoint x="2800" y="1170" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2708" y="816" width="83" height="27" />
+          <dc:Bounds x="2708" y="940" width="83" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0wkwb86_di" bpmnElement="Flow_0wkwb86">
@@ -868,23 +843,23 @@ wenn keine freie Pflegestelle vorhanden ist</bpmn:text>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_05cydt4_di" bpmnElement="Flow_05cydt4">
         <di:waypoint x="1620" y="640" />
-        <di:waypoint x="1620" y="1020" />
+        <di:waypoint x="1620" y="1170" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1556" y="810" width="67" height="40" />
+          <dc:Bounds x="1556" y="907" width="68" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0q4e0fj_di" bpmnElement="Flow_0q4e0fj">
-        <di:waypoint x="1460" y="1020" />
+        <di:waypoint x="1460" y="1170" />
         <di:waypoint x="1460" y="480" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1386" y="816" width="68" height="27" />
+          <dc:Bounds x="1386" y="913" width="68" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1s1au7z_di" bpmnElement="Flow_1s1au7z">
         <di:waypoint x="1290" y="480" />
-        <di:waypoint x="1290" y="1020" />
+        <di:waypoint x="1290" y="1170" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1216" y="816" width="67" height="27" />
+          <dc:Bounds x="1216" y="913" width="68" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1322wdn_di" bpmnElement="Flow_1322wdn">
@@ -896,9 +871,9 @@ wenn keine freie Pflegestelle vorhanden ist</bpmn:text>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0uu0mpf_di" bpmnElement="Flow_0uu0mpf">
         <di:waypoint x="2040" y="320" />
-        <di:waypoint x="2040" y="1020" />
+        <di:waypoint x="2040" y="1170" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1935" y="810" width="89" height="40" />
+          <dc:Bounds x="1935" y="907" width="89" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0xjvbic_di" bpmnElement="Flow_0xjvbic">
@@ -908,6 +883,10 @@ wenn keine freie Pflegestelle vorhanden ist</bpmn:text>
           <dc:Bounds x="2372" y="-337" width="56" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0bqyu30_di" bpmnElement="TextAnnotation_0bqyu30">
+        <dc:Bounds x="1470" y="770" width="150" height="100" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
