@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:spiffworkflow="http://spiffworkflow.org/bpmn/schema/1.0/core" id="Definitions_96f6665" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.0.0-dev">
+  <bpmn:collaboration id="Collaboration_00h7x6u">
+    <bpmn:participant id="Participant_0zmw8zd" name="Pflegestelle" processRef="Process_pflegestellen_interessentenevaluierung_lrt7mzg" />
+    <bpmn:participant id="Participant_0n0mu3v" name="TSV" />
+    <bpmn:messageFlow id="Flow_1mq7hvt" sourceRef="Participant_0n0mu3v" targetRef="Event_0mciwec" />
+    <bpmn:messageFlow id="Flow_1hx5wu2" sourceRef="Activity_1r7waif" targetRef="Participant_0n0mu3v" />
+    <bpmn:correlationKey id="CorrelationKey_1590s4e" name="MainCorrelationKey">
+      <bpmn:correlationPropertyRef>interessentId</bpmn:correlationPropertyRef>
+    </bpmn:correlationKey>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_pflegestellen_interessentenevaluierung_lrt7mzg" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_0lcvkst">
+      <bpmn:lane id="Lane_1e409u4" name="admin">
+        <bpmn:flowNodeRef>Event_1x5kmfo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0lr37al</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1r7waif</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0mciwec</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="Flow_1k8vrk0" sourceRef="Event_0mciwec" targetRef="Activity_0lr37al" />
+    <bpmn:sequenceFlow id="Flow_165o7sd" sourceRef="Activity_0lr37al" targetRef="Activity_1r7waif" />
+    <bpmn:endEvent id="Event_1x5kmfo">
+      <bpmn:incoming>Flow_0duo6jr</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0duo6jr" sourceRef="Activity_1r7waif" targetRef="Event_1x5kmfo" />
+    <bpmn:userTask id="Activity_0lr37al" name="Interessenten bewerten">
+      <bpmn:extensionElements>
+        <spiffworkflow:properties>
+          <spiffworkflow:property name="formJsonSchemaFilename" value="evaluierung-schema.json" />
+          <spiffworkflow:property name="formUiSchemaFilename" value="evaluierung-uischema.json" />
+        </spiffworkflow:properties>
+        <spiffworkflow:preScript>interessentId= interessentInfos["interessent"]["id"]
+interessentName = interessentInfos["interessent"]["name"]
+tierName= interessentInfos["tier"]["name"]</spiffworkflow:preScript>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1k8vrk0</bpmn:incoming>
+      <bpmn:outgoing>Flow_165o7sd</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="Activity_1r7waif" name="Feedback senden" messageRef="Rueckmeldung-interessent">
+      <bpmn:extensionElements>
+        <spiffworkflow:messagePayload>{
+"interessentId":interessentId,
+"geeignet":geeignet
+}</spiffworkflow:messagePayload>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_165o7sd</bpmn:incoming>
+      <bpmn:outgoing>Flow_0duo6jr</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:startEvent id="Event_0mciwec">
+      <bpmn:outgoing>Flow_1k8vrk0</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1xip1w0" messageRef="PflegestelleUeberInteressentInformieren">
+        <bpmn:extensionElements>
+          <spiffworkflow:messageVariable>interessentInfos</spiffworkflow:messageVariable>
+        </bpmn:extensionElements>
+      </bpmn:messageEventDefinition>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmn:message id="PflegestelleUeberInteressentInformieren" name="PflegestelleUeberInteressentInformieren" />
+  <bpmn:message id="Rueckmeldung-interessent" name="Rueckmeldung-interessent" />
+  <bpmn:correlationProperty id="interessentId" name="interessentId">
+    <bpmn:correlationPropertyRetrievalExpression messageRef="Rueckmeldung-interessent">
+      <bpmn:formalExpression>interessentId</bpmn:formalExpression>
+    </bpmn:correlationPropertyRetrievalExpression>
+  </bpmn:correlationProperty>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_00h7x6u">
+      <bpmndi:BPMNShape id="Participant_0zmw8zd_di" bpmnElement="Participant_0zmw8zd" isHorizontal="true">
+        <dc:Bounds x="-60" y="-10" width="600" height="260" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1e409u4_di" bpmnElement="Lane_1e409u4" isHorizontal="true">
+        <dc:Bounds x="-30" y="-10" width="570" height="260" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1x5kmfo_di" bpmnElement="Event_1x5kmfo">
+        <dc:Bounds x="412" y="92" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0t9wu5e_di" bpmnElement="Activity_0lr37al">
+        <dc:Bounds x="90" y="70" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_10cysyn_di" bpmnElement="Activity_1r7waif">
+        <dc:Bounds x="250" y="70" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ur7b1y_di" bpmnElement="Event_0mciwec">
+        <dc:Bounds x="2" y="92" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1k8vrk0_di" bpmnElement="Flow_1k8vrk0">
+        <di:waypoint x="38" y="110" />
+        <di:waypoint x="90" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_165o7sd_di" bpmnElement="Flow_165o7sd">
+        <di:waypoint x="190" y="110" />
+        <di:waypoint x="250" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0duo6jr_di" bpmnElement="Flow_0duo6jr">
+        <di:waypoint x="350" y="110" />
+        <di:waypoint x="412" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_0jjsnjc_di" bpmnElement="Participant_0n0mu3v" isHorizontal="true">
+        <dc:Bounds x="-60" y="-130" width="600" height="60" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1mq7hvt_di" bpmnElement="Flow_1mq7hvt">
+        <di:waypoint x="20" y="-70" />
+        <di:waypoint x="20" y="92" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hx5wu2_di" bpmnElement="Flow_1hx5wu2">
+        <di:waypoint x="300" y="70" />
+        <di:waypoint x="300" y="-70" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
