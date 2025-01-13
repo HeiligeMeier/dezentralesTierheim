@@ -23,7 +23,16 @@
       <bpmn:text>Adoptionsstatus = adoptiert oder nicht adoptiert</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1sq5mzl" associationDirection="None" sourceRef="Activity_0w823fp" targetRef="TextAnnotation_1besnzs" />
-    <bpmn:correlationKey id="CorrelationKey_1ksagyd" name="MainCorrelationKey">
+    <bpmn:textAnnotation id="TextAnnotation_1x5evr7">
+      <bpmn:text>{
+            "interessent": interessent,
+            "pflegestelle": pflegestelle,
+            "tier": tier,
+            "messageType": "PflegestelleInteressentInformieren"
+            }</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_108fbzj" associationDirection="None" sourceRef="Activity_1sbhvgb" targetRef="TextAnnotation_1x5evr7" />
+    <bpmn:correlationKey id="CorrelationKey_05sgqut" name="MainCorrelationKey">
       <bpmn:correlationPropertyRef>tierId</bpmn:correlationPropertyRef>
     </bpmn:correlationKey>
   </bpmn:collaboration>
@@ -39,8 +48,8 @@
         <bpmn:flowNodeRef>Activity_1ix7u3c</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_0lf2kfy</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_05fly67</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_003ot66</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_0zdgrlw</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_003ot66</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="Flow_08gzln3" sourceRef="Event_1opryyo" targetRef="Activity_065g1fv" />
@@ -102,13 +111,12 @@
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_0c2mpfk" name="Ja" sourceRef="Gateway_1xvgtuu" targetRef="Activity_0rt5d6x" />
       <bpmn:sequenceFlow id="Flow_1hyyjle" sourceRef="Activity_1sbhvgb" targetRef="Activity_12799yg" />
-      <bpmn:sendTask id="Activity_1sbhvgb" name="Feedback zum Interessenten einholen" messageRef="pflegestelle-benachrichtigen">
+      <bpmn:sendTask id="Activity_1sbhvgb" name="Feedback zum Interessenten einholen" messageRef="PflegestelleUeberInteressentInformieren">
         <bpmn:extensionElements>
           <spiffworkflow:messagePayload>{
             "interessent": interessent,
             "pflegestelle": pflegestelle,
-            "tier": tier,
-            "messageType": "PflegestelleInteressentInformieren"
+            "tier": tier
             }</spiffworkflow:messagePayload>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_153ocso</bpmn:incoming>
@@ -131,9 +139,15 @@
       <bpmn:receiveTask id="Activity_12799yg" name="Auf Feedback der Pflegestelle warten" messageRef="Rueckmeldung-interessent">
         <bpmn:extensionElements>
           <spiffworkflow:messageVariable>feedback</spiffworkflow:messageVariable>
+          <spiffworkflow:preScript>interessentId = interessent["id"]</spiffworkflow:preScript>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1hyyjle</bpmn:incoming>
         <bpmn:outgoing>Flow_0a84ji5</bpmn:outgoing>
+        <bpmn:property id="Property_199qezx" name="__targetRef_placeholder" />
+        <bpmn:dataInputAssociation id="DataInputAssociation_11pkmj7">
+          <bpmn:sourceRef>DataObjectReference_0ct5mma</bpmn:sourceRef>
+          <bpmn:targetRef>Property_199qezx</bpmn:targetRef>
+        </bpmn:dataInputAssociation>
       </bpmn:receiveTask>
       <bpmn:exclusiveGateway id="Gateway_1bugq3w" name="Positives Feedback?" default="Flow_0qq8jug">
         <bpmn:incoming>Flow_0a84ji5</bpmn:incoming>
@@ -198,7 +212,7 @@
         <bpmn:outgoing>Flow_1bl5okb</bpmn:outgoing>
       </bpmn:receiveTask>
       <bpmn:sequenceFlow id="Flow_1dh9cuv" sourceRef="Event_15ccarh" targetRef="Activity_17p0yc9" />
-      <bpmn:sendTask id="Activity_17p0yc9" name="Pflegestelle an Abgabe des Adoptions-vertrags erinnern" messageRef="pflegestelle-benachrichtigen">
+      <bpmn:sendTask id="Activity_17p0yc9" name="Pflegestelle an Abgabe des Adoptions-vertrags erinnern">
         <bpmn:extensionElements>
           <spiffworkflow:messagePayload>{
             "interessent": interessent,
@@ -223,14 +237,14 @@
         <bpmn:incoming>Flow_0pbvtwt</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_0pbvtwt" sourceRef="Activity_17p0yc9" targetRef="Event_028ff26" />
-      <bpmn:boundaryEvent id="Event_15ccarh" name="Nach 24 Stunden" cancelActivity="false" attachedToRef="Activity_1q7i0ak">
+      <bpmn:boundaryEvent id="Event_15ccarh" name="Alle 24 Stunden" cancelActivity="false" attachedToRef="Activity_1q7i0ak">
         <bpmn:outgoing>Flow_1dh9cuv</bpmn:outgoing>
         <bpmn:timerEventDefinition id="TimerEventDefinition_1lbfpvv">
           <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">"R5/PT24H"</bpmn:timeCycle>
         </bpmn:timerEventDefinition>
       </bpmn:boundaryEvent>
       <bpmn:sequenceFlow id="Flow_0cydjyl" sourceRef="Event_1xe9vrb" targetRef="Activity_0rtpuba" />
-      <bpmn:sendTask id="Activity_0rtpuba" name="Pflegestelle an Feedback erinnern" messageRef="pflegestelle-benachrichtigen">
+      <bpmn:sendTask id="Activity_0rtpuba" name="Pflegestelle an Feedback erinnern">
         <bpmn:extensionElements>
           <spiffworkflow:messagePayload>{
             "interessent": interessent,
@@ -363,8 +377,8 @@
           </spiffworkflow:parameters>
         </spiffworkflow:serviceTaskOperator>
         <spiffworkflow:postScript>import json
-          adoptiert=adopted.get("body")
-          adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
+adoptiert=adopted.get("body")
+adoptiertAntwort=adoptiert.get("raw_response")</spiffworkflow:postScript>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1hhng6o</bpmn:incoming>
       <bpmn:outgoing>Flow_0mfddez</bpmn:outgoing>
@@ -374,7 +388,6 @@
         <bpmn:targetRef>Property_1g5kujb</bpmn:targetRef>
       </bpmn:dataInputAssociation>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_1nzuw4y" sourceRef="Activity_06fr7oa" targetRef="Event_003ot66" />
     <bpmn:sendTask id="Activity_06fr7oa" name="Nachricht, dass Tier bereits adoptiert wurde, senden" messageRef="interessent-benachrichtigen">
       <bpmn:extensionElements>
         <spiffworkflow:messagePayload>{
@@ -408,7 +421,7 @@
         <bpmn:targetRef>Property_1giasvb</bpmn:targetRef>
       </bpmn:dataInputAssociation>
     </bpmn:sendTask>
-    <bpmn:endEvent id="Event_0lf2kfy">
+    <bpmn:endEvent id="Event_0lf2kfy" name="Tier wurde von anderem Interessenten adoptiert">
       <bpmn:incoming>Flow_1d0rr8r</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:boundaryEvent id="Event_0zdgrlw" name="Tier wurde von anderem Interessenten adoptiert" attachedToRef="Activity_0iec2gm">
@@ -417,16 +430,17 @@
     </bpmn:boundaryEvent>
     <bpmn:dataObject id="tier" name="tier" />
     <bpmn:dataObjectReference id="DataObjectReference_13060m9" name="tier" dataObjectRef="tier" />
-    <bpmn:endEvent id="Event_05fly67">
+    <bpmn:endEvent id="Event_05fly67" name="Interessenten-evaluierung beendet">
       <bpmn:incoming>Flow_0xjggm7</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1nzuw4y" sourceRef="Activity_06fr7oa" targetRef="Event_003ot66" />
     <bpmn:endEvent id="Event_003ot66" name="Tier schon vergeben">
       <bpmn:incoming>Flow_1nzuw4y</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:dataObjectReference id="DataObjectReference_13060m9" name="tier" dataObjectRef="tier" />
   </bpmn:process>
   <bpmn:message id="interessent-benachrichtigen" name="interessent-benachrichtigen" />
   <bpmn:message id="Tieranfrage" name="Tieranfrage" />
-  <bpmn:message id="Rueckmeldung-interessent" name="Rueckmeldung-interessent" />
   <bpmn:message id="adoptionsvertrag" name="adoptionsvertrag" />
   <bpmn:signal id="TierVergeben" name="TierVergeben">
     <bpmn:extensionElements>
@@ -436,13 +450,14 @@
       <spiffworkflow:variableName>tier</spiffworkflow:variableName>
     </bpmn:extensionElements>
   </bpmn:signal>
-  <bpmn:message id="pflegestelle-benachrichtigen" name="pflegestelle-benachrichtigen" />
   <bpmn:correlationProperty id="tierId" name="tierId">
     <bpmn:correlationPropertyRetrievalExpression messageRef="Adoptionsstelle_gefunden2">
       <bpmn:formalExpression>tierId</bpmn:formalExpression>
     </bpmn:correlationPropertyRetrievalExpression>
   </bpmn:correlationProperty>
   <bpmn:message id="Adoptionsstelle_gefunden2" name="Adoptionsstelle_gefunden2" />
+  <bpmn:message id="PflegestelleUeberInteressentInformieren" name="PflegestelleUeberInteressentInformieren" />
+  <bpmn:message id="Rueckmeldung-interessent" name="Rueckmeldung-interessent" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0c0qnbk">
       <bpmndi:BPMNShape id="Participant_1popvih_di" bpmnElement="Participant_1popvih" isHorizontal="true">
@@ -463,6 +478,12 @@
         <dc:Bounds x="565" y="249" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="547" y="306" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataObjectReference_13060m9_di" bpmnElement="DataObjectReference_13060m9">
+        <dc:Bounds x="1342" y="625" width="36" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1353" y="682" width="16" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0iec2gm_di" bpmnElement="Activity_0iec2gm" isExpanded="true">
@@ -566,7 +587,7 @@
       <bpmndi:BPMNShape id="Event_1p4jhqd_di" bpmnElement="Event_15ccarh">
         <dc:Bounds x="2032" y="386" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2067" y="413" width="86" height="14" />
+          <dc:Bounds x="2072" y="413" width="77" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0zv8qp6_di" bpmnElement="Flow_0zv8qp6">
@@ -685,9 +706,9 @@
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="DataObjectReference_19bylzs_di" bpmnElement="DataObjectReference_19bylzs">
-        <dc:Bounds x="1122" y="625" width="36" height="50" />
+        <dc:Bounds x="1062" y="625" width="36" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1113" y="682" width="57" height="14" />
+          <dc:Bounds x="1054" y="682" width="56" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1qsje1r_di" bpmnElement="Activity_1ix7u3c">
@@ -696,20 +717,20 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0lf2kfy_di" bpmnElement="Event_0lf2kfy">
         <dc:Bounds x="2712" y="32" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DataObjectReference_13060m9_di" bpmnElement="DataObjectReference_13060m9">
-        <dc:Bounds x="1322" y="625" width="36" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1333" y="682" width="15" height="14" />
+          <dc:Bounds x="2694" y="75" width="72" height="53" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_05fly67_di" bpmnElement="Event_05fly67">
         <dc:Bounds x="2712" y="287" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2695" y="330" width="72" height="40" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0hmszky_di" bpmnElement="Event_003ot66">
-        <dc:Bounds x="812" y="-78" width="36" height="36" />
+        <dc:Bounds x="2712" y="-78" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="807" y="-35" width="51" height="27" />
+          <dc:Bounds x="2707" y="-35" width="52" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1syeu83_di" bpmnElement="Event_0zdgrlw">
@@ -753,13 +774,13 @@
         <di:waypoint x="390" y="274" />
         <di:waypoint x="565" y="274" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1nzuw4y_di" bpmnElement="Flow_1nzuw4y">
-        <di:waypoint x="740" y="-60" />
-        <di:waypoint x="812" y="-60" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0xjggm7_di" bpmnElement="Flow_0xjggm7">
         <di:waypoint x="2430" y="305" />
         <di:waypoint x="2712" y="305" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nzuw4y_di" bpmnElement="Flow_1nzuw4y">
+        <di:waypoint x="740" y="-60" />
+        <di:waypoint x="2712" y="-60" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_1ta9yab_di" bpmnElement="Participant_1o8cm0y" isHorizontal="true">
         <dc:Bounds x="-190" y="-290" width="3130" height="60" />
@@ -777,22 +798,26 @@
         <dc:Bounds x="290" y="340" width="99.99274985992396" height="55.73300174442872" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1x5evr7_di" bpmnElement="TextAnnotation_1x5evr7">
+        <dc:Bounds x="1170" y="-560" width="240" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="DataInputAssociation_1jhuehv_di" bpmnElement="DataInputAssociation_1jhuehv">
         <di:waypoint x="248" y="46" />
         <di:waypoint x="850" y="245" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_1vmy978_di" bpmnElement="DataInputAssociation_1vmy978">
-        <di:waypoint x="248" y="50" />
-        <di:waypoint x="850" y="380" />
-        <di:waypoint x="1510" y="380" />
+        <di:waypoint x="248" y="59" />
+        <di:waypoint x="620" y="460" />
+        <di:waypoint x="1513" y="400" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_1t2qryw_di" bpmnElement="DataInputAssociation_1t2qryw">
-        <di:waypoint x="1158" y="639" />
-        <di:waypoint x="1533" y="404" />
+        <di:waypoint x="1098" y="640" />
+        <di:waypoint x="1529" y="404" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_08ngcmj_di" bpmnElement="DataInputAssociation_08ngcmj">
-        <di:waypoint x="1358" y="629" />
-        <di:waypoint x="1548" y="404" />
+        <di:waypoint x="1378" y="627" />
+        <di:waypoint x="1551" y="404" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_1y62u1z_di" bpmnElement="DataInputAssociation_1y62u1z">
         <di:waypoint x="248" y="41" />
@@ -803,36 +828,37 @@
         <di:waypoint x="2160" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0lcp8hx_di" bpmnElement="DataInputAssociation_0lcp8hx">
-        <di:waypoint x="1158" y="647" />
+        <di:waypoint x="1098" y="647" />
         <di:waypoint x="2070" y="497" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0jec5al_di" bpmnElement="DataInputAssociation_0jec5al">
-        <di:waypoint x="1358" y="647" />
+        <di:waypoint x="1378" y="647" />
         <di:waypoint x="2072" y="525" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0v6pizl_di" bpmnElement="DataInputAssociation_0v6pizl">
-        <di:waypoint x="1158" y="646" />
-        <di:waypoint x="1790" y="520" />
+        <di:waypoint x="1098" y="647" />
+        <di:waypoint x="1790" y="518" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0e8zfih_di" bpmnElement="DataInputAssociation_0e8zfih">
-        <di:waypoint x="1358" y="645" />
+        <di:waypoint x="1378" y="645" />
         <di:waypoint x="1791" y="523" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0hd6qk5_di" bpmnElement="DataInputAssociation_0hd6qk5">
-        <di:waypoint x="248" y="47" />
-        <di:waypoint x="1110" y="361" />
+        <di:waypoint x="248" y="49" />
+        <di:waypoint x="860" y="370" />
+        <di:waypoint x="1110" y="378" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataOutputAssociation_0ic7o14_di" bpmnElement="DataOutputAssociation_0ic7o14">
-        <di:waypoint x="1157" y="404" />
-        <di:waypoint x="1142" y="625" />
+        <di:waypoint x="1150" y="404" />
+        <di:waypoint x="1087" y="625" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_0hrsojs_di" bpmnElement="DataInputAssociation_0hrsojs">
         <di:waypoint x="248" y="45" />
         <di:waypoint x="1290" y="334" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataOutputAssociation_06rnvc8_di" bpmnElement="DataOutputAssociation_06rnvc8">
-        <di:waypoint x="1340" y="404" />
-        <di:waypoint x="1340" y="625" />
+        <di:waypoint x="1343" y="404" />
+        <di:waypoint x="1358" y="625" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataOutputAssociation_1gt3uj1_di" bpmnElement="DataOutputAssociation_1gt3uj1">
         <di:waypoint x="106" y="234" />
@@ -853,6 +879,10 @@
       <bpmndi:BPMNEdge id="Association_1sq5mzl_di" bpmnElement="Association_1sq5mzl">
         <di:waypoint x="340" y="314" />
         <di:waypoint x="340" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_108fbzj_di" bpmnElement="Association_108fbzj">
+        <di:waypoint x="1545" y="324" />
+        <di:waypoint x="1259" y="-440" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1j4nr5f_di" bpmnElement="Flow_1j4nr5f">
         <di:waypoint x="-90" y="-230" />
@@ -925,6 +955,10 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="2306" y="784" width="89" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_11pkmj7_di" bpmnElement="DataInputAssociation_11pkmj7">
+        <di:waypoint x="248" y="44" />
+        <di:waypoint x="1671" y="332" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
