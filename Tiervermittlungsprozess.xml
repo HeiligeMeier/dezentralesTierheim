@@ -7,6 +7,10 @@
     <bpmn:messageFlow id="Flow_1rurmzb" name="Tier adoptierbereit" sourceRef="Participant_1dnkt6c" targetRef="Event_0gfy0pz" />
     <bpmn:messageFlow id="Flow_1vo261i" name="Adoptant gefunden" sourceRef="Participant_1popvih" targetRef="Event_1yl4iqa" />
     <bpmn:messageFlow id="Flow_0ua92u5" name="Tier verstorben" sourceRef="Participant_1dnkt6c" targetRef="Event_022rh2p" />
+    <bpmn:textAnnotation id="TextAnnotation_08ufjbf">
+      <bpmn:text>Teilprozess, da es mit einem angehefteten Empfangsereignis direkt am Task nicht funktioniert hat</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0jyr9qo" associationDirection="None" sourceRef="Activity_0wyxw52" targetRef="TextAnnotation_08ufjbf" />
     <bpmn:correlationKey id="CorrelationKey_1tykql3" name="MainCorrelationKey">
       <bpmn:correlationPropertyRef>tierId</bpmn:correlationPropertyRef>
     </bpmn:correlationKey>
@@ -272,7 +276,7 @@ inseratdaten["bild"] = bild
       <bpmn:outgoing>Flow_05csoo8</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0t8mkjq" messageRef="Adoptionsstelle_gefunden2">
         <bpmn:extensionElements>
-          <spiffworkflow:messageVariable>tierIdVar</spiffworkflow:messageVariable>
+          <spiffworkflow:messageVariable />
           <spiffworkflow:processVariableCorrelation>
             <spiffworkflow:propertyId>interessiertAnTierId</spiffworkflow:propertyId>
             <spiffworkflow:expression>inseratResponse["body"]["tierId"]</spiffworkflow:expression>
@@ -473,7 +477,7 @@ inseratdaten["bild"] = bild
       <bpmndi:BPMNShape id="Event_1nfc8qs_di" bpmnElement="Event_1yl4iqa">
         <dc:Bounds x="1472" y="1152" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1408" y="1143" width="64" height="14" />
+          <dc:Bounds x="1408" y="1143" width="65" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0mndmtm_di" bpmnElement="Flow_0mndmtm">
@@ -573,6 +577,10 @@ inseratdaten["bild"] = bild
         <dc:Bounds x="1610" y="790" width="688" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_08ufjbf_di" bpmnElement="TextAnnotation_08ufjbf">
+        <dc:Bounds x="1180" y="1060" width="169.98968002549725" height="69.68641114982579" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="DataOutputAssociation_18hfybu_di" bpmnElement="DataOutputAssociation_18hfybu">
         <di:waypoint x="638" y="1254" />
         <di:waypoint x="713" y="1105" />
@@ -605,8 +613,8 @@ inseratdaten["bild"] = bild
         <di:waypoint x="1740" y="1377" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_13o13ec_di" bpmnElement="DataInputAssociation_13o13ec">
-        <di:waypoint x="1148" y="1464" />
-        <di:waypoint x="1740" y="1591" />
+        <di:waypoint x="1148" y="1463" />
+        <di:waypoint x="1740" y="1560" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_18phwzm_di" bpmnElement="DataInputAssociation_18phwzm">
         <di:waypoint x="1148" y="1467" />
@@ -628,6 +636,10 @@ inseratdaten["bild"] = bild
         <di:waypoint x="1148" y="1457" />
         <di:waypoint x="1600" y="1370" />
         <di:waypoint x="1744" y="1147" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0jyr9qo_di" bpmnElement="Association_0jyr9qo">
+        <di:waypoint x="1230" y="1170" />
+        <di:waypoint x="1230" y="1130" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1rurmzb_di" bpmnElement="Flow_1rurmzb">
         <di:waypoint x="630" y="850" />
