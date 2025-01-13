@@ -3,8 +3,8 @@
   <bpmn:collaboration id="Collaboration_00h7x6u">
     <bpmn:participant id="Participant_0zmw8zd" name="Pflegestelle" processRef="Process_pflegestellen_interessentenevaluierung_lrt7mzg" />
     <bpmn:participant id="Participant_0n0mu3v" name="TSV" />
-    <bpmn:messageFlow id="Flow_1mq7hvt" sourceRef="Participant_0n0mu3v" targetRef="Event_0mciwec" />
-    <bpmn:messageFlow id="Flow_1hx5wu2" sourceRef="Activity_1r7waif" targetRef="Participant_0n0mu3v" />
+    <bpmn:messageFlow id="Flow_1mq7hvt" name="Infos zu Interessent" sourceRef="Participant_0n0mu3v" targetRef="Event_0mciwec" />
+    <bpmn:messageFlow id="Flow_1hx5wu2" name="Feedback zu Interessent" sourceRef="Activity_1r7waif" targetRef="Participant_0n0mu3v" />
     <bpmn:correlationKey id="CorrelationKey_1590s4e" name="MainCorrelationKey">
       <bpmn:correlationPropertyRef>interessentId</bpmn:correlationPropertyRef>
     </bpmn:correlationKey>
@@ -20,7 +20,7 @@
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="Flow_1k8vrk0" sourceRef="Event_0mciwec" targetRef="Activity_0lr37al" />
     <bpmn:sequenceFlow id="Flow_165o7sd" sourceRef="Activity_0lr37al" targetRef="Activity_1r7waif" />
-    <bpmn:endEvent id="Event_1x5kmfo">
+    <bpmn:endEvent id="Event_1x5kmfo" name="Evaluierung beendet">
       <bpmn:incoming>Flow_0duo6jr</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0duo6jr" sourceRef="Activity_1r7waif" targetRef="Event_1x5kmfo" />
@@ -47,7 +47,7 @@ tierName= interessentInfos["tier"]["name"]</spiffworkflow:preScript>
       <bpmn:incoming>Flow_165o7sd</bpmn:incoming>
       <bpmn:outgoing>Flow_0duo6jr</bpmn:outgoing>
     </bpmn:sendTask>
-    <bpmn:startEvent id="Event_0mciwec">
+    <bpmn:startEvent id="Event_0mciwec" name="Anfrage zur Evaluierung eines Interessenten">
       <bpmn:outgoing>Flow_1k8vrk0</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_1xip1w0" messageRef="PflegestelleUeberInteressentInformieren">
         <bpmn:extensionElements>
@@ -75,6 +75,9 @@ tierName= interessentInfos["tier"]["name"]</spiffworkflow:preScript>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1x5kmfo_di" bpmnElement="Event_1x5kmfo">
         <dc:Bounds x="412" y="92" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="401" y="135" width="59" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0t9wu5e_di" bpmnElement="Activity_0lr37al">
         <dc:Bounds x="90" y="70" width="100" height="80" />
@@ -86,6 +89,9 @@ tierName= interessentInfos["tier"]["name"]</spiffworkflow:preScript>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0ur7b1y_di" bpmnElement="Event_0mciwec">
         <dc:Bounds x="2" y="92" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-24" y="135" width="88" height="40" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1k8vrk0_di" bpmnElement="Flow_1k8vrk0">
         <di:waypoint x="38" y="110" />
@@ -106,10 +112,16 @@ tierName= interessentInfos["tier"]["name"]</spiffworkflow:preScript>
       <bpmndi:BPMNEdge id="Flow_1mq7hvt_di" bpmnElement="Flow_1mq7hvt">
         <di:waypoint x="20" y="-70" />
         <di:waypoint x="20" y="92" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="32" y="8" width="55" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1hx5wu2_di" bpmnElement="Flow_1hx5wu2">
         <di:waypoint x="300" y="70" />
         <di:waypoint x="300" y="-70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="283" y="-3" width="64" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
