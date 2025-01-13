@@ -156,7 +156,6 @@ public class Route extends RouteBuilder {
 
                 msg = "Guten Tag " + mailRequestDto.getInteressent().getName() + ", \n \n" +
                         "leider müssen wir Ihnen mitteilen, dass wir Ihre Adoptionsanfrage nicht bestätigen können. \n" +
-                        "Dies kann unter anderem an der Verkehrslage oder anderen Tieren in einem Haushalt liegen. \n" +
                         "Falls Sie mehr erfahren möchten, setzen Sie sich gerne mit uns in Verbindung. \n" +
                         "Wir bitten um Ihr Verständnis. \n \n" +
                         "Mit freundlichen Grüßen \n" +
